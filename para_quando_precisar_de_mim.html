@@ -1,0 +1,1498 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5.0">
+<meta name="theme-color" content="#040a14">
+<title>Quando você precisar de mim</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:ital,wght@0,400;0,600;0,700;0,800;1,600&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  
+  :root {
+    --bg-body: #040a14;
+    --bg-card: #0a1628;
+    --bg-btn: #1a3463;
+    --azul-borda: #4d9fff;
+    --azul-claro: #a5d8ff;
+    --texto: #ffffff;
+    --sombra-solida: 0 6px 0 #000000; 
+    --borda-grossa: 4px solid var(--azul-borda);
+  }
+
+  html { height: 100%; -webkit-text-size-adjust: 100%; }
+  body {
+    font-family: 'Nunito', sans-serif;
+    background-color: var(--bg-body);
+    background-image: 
+      radial-gradient(circle at 10% 10%, rgba(77, 159, 255, 0.1) 0%, transparent 40%),
+      radial-gradient(circle at 90% 90%, rgba(165, 216, 255, 0.08) 0%, transparent 40%);
+    color: var(--texto);
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 16px;
+    padding-top: calc(20px + env(safe-area-inset-top));
+    padding-bottom: calc(20px + env(safe-area-inset-bottom));
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  #hearts { position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 1; }
+  .heart {
+    position: absolute; bottom: -10%; color: var(--azul-borda); opacity: 0.15;
+    animation: flutuarCima linear infinite;
+  }
+  @keyframes flutuarCima {
+    0% { transform: translateY(0) rotate(0); opacity: 0; }
+    10% { opacity: 0.3; }
+    90% { opacity: 0.3; }
+    100% { transform: translateY(-110vh) rotate(30deg); opacity: 0; }
+  }
+
+  .app { position: relative; z-index: 2; width: 100%; max-width: 600px; display: flex; flex-direction: column; gap: 20px; }
+
+  header { text-align: center; padding: 0 10px; }
+  h1 {
+    font-family: 'Fredoka', sans-serif; font-size: clamp(26px, 8vw, 38px);
+    font-weight: 700; line-height: 1.1; color: #fff; text-shadow: 3px 3px 0 #000; margin-bottom: 8px;
+  }
+  .sub { font-size: 15px; font-weight: 700; color: var(--azul-claro); }
+
+  .chips-wrap { position: relative; margin: 0 -16px; padding: 0 16px; }
+  .chips {
+    display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none;
+    padding-bottom: 15px; padding-top: 5px; justify-content: flex-start;
+  }
+  .chips::-webkit-scrollbar { display: none; }
+  @media (min-width: 640px) { .chips { flex-wrap: wrap; justify-content: center; } }
+  
+  .chip {
+    font-family: 'Fredoka', sans-serif; font-size: 14px; font-weight: 500;
+    background: var(--bg-btn); color: #fff; border: 3px solid var(--azul-borda); border-radius: 50px;
+    padding: 8px 16px; white-space: nowrap; cursor: pointer; box-shadow: 0 4px 0 #000;
+    transition: all 0.1s; display: flex; align-items: center; gap: 4px;
+  }
+  .chip:active, .chip.active { transform: translateY(4px); box-shadow: 0 0 0 #000; background: var(--azul-borda); color: #fff; }
+
+  .card {
+    background: var(--bg-card); border: var(--borda-grossa); border-radius: 32px; box-shadow: var(--sombra-solida);
+    padding: 25px 22px 30px; position: relative; display: flex; flex-direction: column; gap: 20px;
+  }
+  
+  .kitty-header {
+    display: flex; justify-content: center; margin-top: -60px; margin-bottom: 5px;
+    position: relative;
+  }
+  .kitty-wrapper {
+    position: relative;
+    animation: floatKitty 3s ease-in-out infinite;
+    cursor: pointer;
+  }
+  @keyframes floatKitty {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+
+  .kitty-img { 
+    width: 125px; height: 125px; object-fit: cover; border-radius: 50%;
+    background: linear-gradient(135deg, #1a3463, #0a1628);
+    border: 3px solid var(--azul-borda);
+    box-shadow: 0 0 20px rgba(77, 159, 255, 0.6), inset 0 0 15px rgba(77, 159, 255, 0.3);
+    position: relative; z-index: 2;
+    transition: transform 0.2s;
+  }
+  .kitty-img:active { transform: scale(0.95); }
+
+  .fly-kiss {
+    position: fixed; pointer-events: none; z-index: 9999; font-size: 30px;
+    transform: translate(-50%, -50%); will-change: transform, opacity;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.35));
+    animation: kissBurst 950ms cubic-bezier(.12,.72,.22,1) forwards;
+  }
+  @keyframes kissBurst {
+    0% { opacity: 0; transform: translate(-50%, -50%) scale(.15) rotate(0deg); }
+    12% { opacity: 1; transform: translate(-50%, -50%) scale(1.45) rotate(var(--spin)); }
+    28% { opacity: 1; transform: translate(calc(-50% + var(--dx) * .45), calc(-50% + var(--dy) * .45)) scale(1.1) rotate(var(--spin)); }
+    100% { opacity: 0; transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(.65) rotate(var(--spin)); }
+  }
+  .kiss-ring {
+    position: fixed; z-index: 9998; pointer-events: none; width: 16px; height: 16px;
+    border: 3px solid #a5d8ff; border-radius: 50%;
+    transform: translate(-50%, -50%); animation: kissRing 550ms ease-out forwards;
+  }
+  @keyframes kissRing {
+    0% { opacity: .95; width: 8px; height: 8px; border-width: 4px; }
+    100% { opacity: 0; width: 150px; height: 150px; border-width: 1px; }
+  }
+
+  .msg {
+    font-family: 'Nunito', sans-serif; font-size: clamp(16px, 4.5vw, 18px);
+    line-height: 1.6; font-weight: 700; color: #fff; text-align: center;
+    min-height: 160px; display: flex; align-items: center; justify-content: center;
+  }
+  .msg.pop { animation: popBounce 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+  @keyframes popBounce { 0% { transform: scale(0.95); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+
+  .actions { display: flex; flex-direction: column; gap: 12px; }
+  .btn-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  
+  .btn {
+    font-family: 'Fredoka', sans-serif; font-size: 15px; font-weight: 600;
+    border: 3px solid var(--azul-borda); border-radius: 20px; padding: 14px 10px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    box-shadow: 0 5px 0 #000; transition: all 0.1s; background: var(--bg-btn); color: #fff; text-align: center; line-height: 1.2;
+  }
+  .btn:active { transform: translateY(5px); box-shadow: 0 0 0 #000; }
+  
+  .btn.destaque { background: var(--azul-borda); border-color: #fff; color: #fff; }
+  .btn.amor { background: #2563eb; border-color: #93c5fd; color: #fff; }
+  .btn.amor:active { box-shadow: 0 0 0 #000; }
+  .btn.desculpa { background: #0d47a1; border-color: #fff; color: #fff; }
+  .btn.desculpa:active { box-shadow: 0 0 0 #000; }
+  .btn.distrair { background: #8b5cf6; border-color: #c4b5fd; color: #fff; }
+  .btn.distrair:active { box-shadow: 0 0 0 #000; }
+
+  /* Overlays Gerais */
+  .overlay {
+    position: fixed; inset: 0; z-index: 100; background: rgba(4, 10, 20, 0.95);
+    display: none; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(8px);
+  }
+  .overlay.on { display: flex; animation: fadeIn 0.3s ease-out; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  .overlay-card {
+    background: var(--bg-card); border: var(--borda-grossa); border-radius: 32px; box-shadow: 0 10px 0 #000;
+    padding: 30px 20px; width: 100%; max-width: 450px; text-align: center; position: relative; max-height: 90vh; overflow-y: auto;
+  }
+  .overlay-card::-webkit-scrollbar { width: 0; }
+
+  /* DESCULPAS E MOTIVOS */
+  .desculpa-texto { font-family: 'Nunito', sans-serif; font-size: 16px; line-height: 1.5; font-weight: 700; margin-bottom: 20px; color: #fff; min-height: 120px; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 10px;}
+  .promessas { background: #08101e; border-radius: 20px; padding: 15px; text-align: left; margin-bottom: 20px; border: 2px solid var(--azul-borda); }
+  .promessas p { font-size: 14px; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; font-weight: 600; }
+  .motivos-txt { font-family: 'Fredoka', sans-serif; font-size: 20px; font-weight: 500; line-height: 1.4; margin-bottom: 15px; min-height: 120px; display: flex; align-items: center; justify-content: center; }
+  .motivos-num { font-family: 'Nunito', sans-serif; font-size: 13px; color: var(--azul-claro); margin-bottom: 20px; font-weight: 800; }
+
+  /* MÚSICAS */
+  .musica-item { background: #08101e; border: 2px solid var(--azul-borda); border-radius: 16px; padding: 15px; margin-bottom: 12px; text-align: left; }
+  .musica-titulo { font-family: 'Fredoka', sans-serif; font-size: 16px; color: var(--azul-claro); margin-bottom: 4px; }
+  .musica-artista { font-size: 13px; color: #a5d8ff; margin-bottom: 10px; font-weight: 600;}
+  .musica-msg { font-family: 'Nunito', sans-serif; font-style: italic; font-size: 14px; color: #fff; font-weight: 600;}
+
+  /* ABRAÇO */
+  .circulo-respira { width: 140px; height: 140px; border-radius: 50%; background: var(--azul-borda); border: 4px solid #fff; box-shadow: 0 0 20px rgba(77,159,255,0.5); display: flex; align-items: center; justify-content: center; font-family: 'Fredoka', sans-serif; font-size: 18px; margin: 30px auto; transition: transform 4s ease-in-out; }
+  .circulo-respira.inspira { transform: scale(1.4); }
+  .circulo-respira.expira { transform: scale(0.8); }
+  .txt-abraco { font-family: 'Nunito', font-weight: 700; font-size: 18px; line-height: 1.5; color: #fff; margin-bottom: 20px; min-height: 80px;}
+
+  /* ===== JOGOS (ME DISTRAIA) ===== */
+  .game-tabs { display: flex; gap: 10px; margin-bottom: 20px; justify-content: center;}
+  .game-tab { font-family: 'Fredoka'; font-size: 14px; padding: 8px 16px; background: var(--bg-btn); border: 2px solid var(--azul-borda); border-radius: 50px; cursor: pointer; color: #fff;}
+  .game-tab.active { background: var(--azul-borda); color: #fff;}
+  .game-section { display: none; }
+  .game-section.active { display: block; }
+
+  .bolhas-area { position: relative; height: 300px; background: #08101e; border-radius: 20px; border: 2px dashed var(--azul-borda); overflow: hidden; cursor: crosshair;}
+  .bolha {
+    position: absolute; bottom: -50px; border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.8), rgba(77,159,255,0.6));
+    border: 2px solid rgba(255,255,255,0.9); cursor: pointer;
+    animation: subirBolha linear forwards;
+  }
+  @keyframes subirBolha { 0% { bottom: -50px; transform: translateX(0); } 100% { bottom: 350px; transform: translateX(20px); } }
+
+  .memoria-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .memoria-card {
+    aspect-ratio: 1; background: var(--bg-btn); border: 3px solid var(--azul-borda); border-radius: 15px;
+    display: flex; align-items: center; justify-content: center; font-size: 30px; cursor: pointer;
+    transition: transform 0.3s, background 0.3s;
+  }
+  .memoria-card.flip { background: var(--azul-claro); transform: rotateY(180deg); }
+  .memoria-card.flip span { transform: rotateY(180deg); display: inline-block;}
+  .memoria-card.matched { background: #2e7d32; border-color: #81c784; pointer-events: none; opacity: 0.7;}
+
+  /* Jogo do Estresse */
+  .stress-container { display: flex; flex-direction: column; align-items: center; margin-top: 10px;}
+  .stress-info { display: flex; justify-content: space-around; width: 100%; margin-bottom: 15px; font-family: 'Fredoka'; font-size: 16px; color: var(--azul-claro);}
+  
+  .btn-estresse {
+    width: 150px; height: 150px; border-radius: 50%; background: #ff4d6d; border: 5px solid #fff;
+    box-shadow: 0 10px 0 #7a0000; display: flex; align-items: center; justify-content: center;
+    font-family: 'Fredoka'; font-size: 20px; color: #fff; cursor: pointer; user-select: none;
+    transition: transform 0.1s, box-shadow 0.1s, width 0.1s, height 0.1s, font-size 0.1s;
+    touch-action: manipulation;
+  }
+  .btn-estresse:active { transform: translateY(5px); box-shadow: 0 5px 0 #7a0000; }
+
+  #stressResult {
+    display: none; margin-top: 20px; font-family: 'Nunito'; font-size: 17px; 
+    font-weight: 700; color: #fff; line-height: 1.5; background: #08101e; 
+    padding: 20px; border-radius: 20px; border: 2px solid var(--azul-borda);
+  }
+
+  .particula { position: fixed; pointer-events: none; z-index: 999; animation: voar 1s ease-out forwards; }
+  @keyframes voar { 0% { transform: translate(0,0) scale(0.5); opacity: 1; } 100% { transform: translate(var(--dx), var(--dy)) scale(1.5); opacity: 0; } }
+
+</style>
+</head>
+<body>
+
+<div id="hearts"></div>
+
+<main class="app">
+  <header>
+    <h1>Quando você precisar de mim</h1>
+    <p class="sub">Escolhe como você tá e eu falo com você</p>
+  </header>
+
+  <div class="chips-wrap">
+    <div class="chips" id="chips"></div>
+  </div>
+
+  <section class="card">
+    
+    <div class="kitty-header">
+      <div class="kitty-wrapper" id="kittyClick">
+        <img src="image.png" alt="Hello Kitty" class="kitty-img">
+      </div>
+    </div>
+
+    <p class="msg" id="msg"></p>
+    
+    <div class="actions">
+      <button class="btn destaque" id="again">Outra mensagem</button>
+      <button class="btn amor" id="btnAmorAleatorio">Eu te amo 💙</button>
+      <button class="btn desculpa" id="btnDesculpa">Me desculpa, meu amor</button>
+      <button class="btn distrair" id="btnDistrair">Me distraia 🎮</button>
+      <div class="btn-row">
+        <button class="btn" id="btnMotivo">Por que te amo</button>
+        <button class="btn" id="btnMusica">Músicas</button>
+      </div>
+      <div class="btn-row">
+        <button class="btn" id="copy">Copiar</button>
+        <button class="btn" id="abraco">Me abraça</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- OVERLAY: ME DISTRAIA (JOGOS) -->
+<div class="overlay" id="overlayDistrair">
+  <div class="overlay-card">
+    <h2 style="font-family: 'Fredoka'; font-size: 24px; margin-bottom: 5px; text-shadow: 2px 2px 0 #000;">Me distraia</h2>
+    <p style="font-size: 13px; color: var(--azul-claro); margin-bottom: 20px;">Joguinhos pra você desestressar 💙</p>
+    
+    <div class="game-tabs">
+      <button class="game-tab active" onclick="mudarJogo(0)">Bolhas</button>
+      <button class="game-tab" onclick="mudarJogo(1)">Memória</button>
+      <button class="game-tab" onclick="mudarJogo(2)">Aliviar</button>
+    </div>
+
+    <div class="game-section active" id="jogo0">
+      <div class="bolhas-area" id="bolhasArea"></div>
+      <p style="font-size: 12px; margin-top: 10px; color: #a5d8ff;">Estoure as bolhas tocando nelas!</p>
+    </div>
+
+    <div class="game-section" id="jogo1">
+      <div class="memoria-grid" id="memoriaGrid"></div>
+      <button class="btn destaque" style="margin-top: 15px; width: 100%;" onclick="iniciarMemoria()">Reiniciar Jogo</button>
+    </div>
+
+    <div class="game-section" id="jogo2">
+      <p style="font-size: 14px; margin-bottom: 15px; font-weight: 700;">Aperte o botão pra jogar toda a raiva e estresse pra fora!</p>
+      
+      <div class="stress-container" id="stressGame">
+        <div class="stress-info">
+          <span>Tempo: <span id="stressTimer">5</span>s</span>
+          <span>Apertos: <span id="stressScore">0</span></span>
+        </div>
+        <div class="btn-estresse" id="btnEstresse">APERTA!</div>
+      </div>
+
+      <div id="stressResult"></div>
+      <button class="btn destaque" id="btnReiniciarStress" style="width:100%; margin-top: 15px; display: none;">Jogar de novo</button>
+    </div>
+
+    <button class="btn" id="fecharDistrair" style="width:100%; margin-top: 20px;">Fechar</button>
+  </div>
+</div>
+
+<!-- OVERLAY: PEDIR DESCULPAS -->
+<div class="overlay" id="overlayDesculpa">
+  <div class="overlay-card">
+    <h2 style="font-family: 'Fredoka'; font-size: 24px; margin-bottom: 15px; text-shadow: 2px 2px 0 #000;">Me perdoa, minha princesa...</h2>
+    <div class="desculpa-texto" id="txtDesculpa"></div>
+    <div class="promessas">
+      <div style="font-family:'Fredoka'; font-size:14px; color:var(--azul-claro); margin-bottom:10px; text-align:center;">Prometo que:</div>
+      <p>Vou pensar duas vezes antes de falar.</p>
+      <p>Vou te ouvir mais e ter mais paciência.</p>
+      <p>Vou te dar todo o carinho do mundo.</p>
+    </div>
+    <button class="btn destaque" id="btnGerarDesculpa" style="margin-bottom: 12px; width: 100%;">Gerar outra desculpa</button>
+    <button class="btn destaque" id="btnPerdoa" style="margin-bottom: 15px; width: 100%; background: #1a3463;">Já te perdoei</button>
+    <button class="btn" id="fecharDesculpa" style="background: transparent; border: none; box-shadow: none; color: var(--azul-claro); font-size: 14px;">Fechar</button>
+  </div>
+</div>
+
+<!-- OVERLAY: MOTIVOS -->
+<div class="overlay" id="overlayMotivos">
+  <div class="overlay-card">
+    <div style="font-family:'Fredoka'; color:var(--azul-claro); font-size:12px; text-transform:uppercase; letter-spacing:1px; margin-bottom:15px;">Um dos milhares de motivos</div>
+    <p class="motivos-txt" id="motivosTxt"></p>
+    <p class="motivos-num" id="motivosNum"></p>
+    <button class="btn destaque" id="btnProximoMotivo" style="margin-bottom:10px; width: 100%;">Outro motivo</button>
+    <button class="btn" id="fecharMotivo" style="width:100%;">Fechar</button>
+  </div>
+</div>
+
+<!-- OVERLAY: MÚSICAS -->
+<div class="overlay" id="overlayMusicas">
+  <div class="overlay-card" style="padding-bottom: 20px;">
+    <h3 style="font-family:'Fredoka'; font-size:22px; margin-bottom:10px;">Nossa Playlist</h3>
+    <p style="font-size: 13px; color: var(--azul-claro); margin-bottom: 15px; font-weight: 700;">Músicas que me lembram você</p>
+    <div id="listaMusicas" style="margin-bottom: 15px; max-height: 45vh; overflow-y: auto; padding-right: 5px;"></div>
+    <a href="https://open.spotify.com/playlist/0f3I2lRHzdg3hO1iVAYiYL?si=gIs6mye2RMS7q3hYjDlEJw" target="_blank" class="btn destaque" style="margin-bottom: 10px; width: 100%; text-decoration: none;">Abrir no Spotify</a>
+    <button class="btn" id="fecharMusicas" style="width:100%;">Fechar</button>
+  </div>
+</div>
+
+<!-- OVERLAY: ABRAÇO -->
+<div class="overlay" id="overlayAbraco">
+  <div class="overlay-card">
+    <div id="passoRespira">
+      <h3 style="font-family:'Fredoka'; font-size:22px; margin-bottom:10px;">Vem cá, respira comigo...</h3>
+      <div class="circulo-respira" id="circuloRespira">inspira</div>
+      <p id="txtRespira" style="font-family:'Nunito'; font-weight:700; color:var(--azul-claro); margin-bottom:20px;">Enche o peito de ar...</p>
+      <button class="btn destaque" id="btnProximoAbraco" style="width:100%;">Continuar</button>
+    </div>
+    <div id="passoAbraco" style="display: none;">
+      <h3 style="font-family:'Fredoka'; font-size:22px; margin-bottom:15px; text-shadow: 2px 2px 0 #000;">Meu abraço é seu.</h3>
+      <p class="txt-abraco" id="txtAbracoFinal">Fecha os olhos e imagina os meus braços te envolvendo bem apertado. Sinta o meu calor, o meu cheiro, e o quanto eu te amo.</p>
+      <button class="btn destaque" id="btnFinalizarAbraco" style="width:100%;">Sinto até daqui</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* =========================================================
+   BANCOS DE DADOS GIGANTES (MILHÕES DE COMBINAÇÕES)
+   ========================================================= */
+const SAUDACOES = [
+  "Minha princesa,", "Meu amor,", "Minha florzinha,", "Meu bebê,", "Meu neném,", "Minha gatinha,",
+  "Oi, minha princesa.", "Oi, meu amor.", "Oi, minha florzinha.", "Oi, meu bebê.", "Oi, meu neném.", "Oi, minha gatinha.",
+  "Escuta, minha princesa,", "Presta atenção, meu amor,", "Sabe de uma coisa, minha florzinha?", "Vem cá, meu bebê,",
+  "Minha gatinha linda,", "Meu neném do coração,", "Minha princesa do meu viver,", "Meu amorzinho,", "Meu bem,", "Minha vida,",
+  "Oi, meu tudo.", "Minha razão de viver,", "Meu porto seguro,", "Minha calmaria,", "Meu sonho,", "Minha pessoa favorita,",
+  "Oi, meu docinho.", "Minha linda,"
+];
+
+const APOIOS = [
+  "Respira. Você não precisa resolver tudo agora, e eu não vou a lugar nenhum.",
+  "Se o peito aperta, lembra que a coisa mais linda que eu já vi passar na minha vida é você.",
+  "Eu queria estar aí pra te abraçar em silêncio, mas saiba que o meu pensamento tá todo em você.",
+  "Tudo bem chorar. Eu seguro a sua mão em pensamento e não te solto.",
+  "Você já superou tanta coisa. É a minha guerreira, a minha pessoa favorita.",
+  "Nada disso é pra sempre. E enquanto passar, eu vou estar aqui.",
+  "Me manda mensagem. Eu respondo na hora, nem que seja de madrugada.",
+  "Você tem todo o direito de se sentir assim. Eu te entendo.",
+  "Fica tranquila. Eu te escolho todos os dias, sem pensar duas vezes.",
+  "Se precisar desabafar, eu escuto. Se precisar só de silêncio, eu calo junto.",
+  "Você não precisa ser forte o tempo todo. Deixa eu ser forte por você.",
+  "Tudo bem ficar mal. O importante é não ficar mal sozinha.",
+  "Um dia ruim não define quem você é. Você é muito mais que isso.",
+  "Eu não vou te julgar, não vou te apressar e não vou te deixar.",
+  "Você merece todo o cuidado do mundo, e eu quero te dar isso.",
+  "Chora, respira, descansa. A gente resolve o resto depois.",
+  "Você não é um peso. Você é o meu lugar favorito no mundo.",
+  "Eu te amo nos dias bons e te amo ainda mais nos dias ruins.",
+  "Se você cair, eu tô aqui pra te levantar. Sempre.",
+  "Você é mais do que suficiente. Não deixa nada te dizer o contrário.",
+  "Não precisa ser forte. Só respira e deixa eu cuidar de você.",
+  "O seu tempo é o seu tempo. Eu espero o quanto for preciso.",
+  "Eu queria poder tirar essa dor de você e colocar em mim.",
+  "Você não tá sozinha. Nem hoje, nem nunca.",
+  "O mundo pode esperar. Você vem primeiro.",
+  "Vem cá, fica comigo. Só um pouquinho. O mundo lá fora pode esperar.",
+  "Fica calma, meu bem. A tempestade passa, e eu sou o seu porto seguro.",
+  "Você é a minha calmaria. Mesmo quando o seu mundo tá de cabeça pra baixo, eu tô aqui.",
+  "Não desiste de nós, nem de você. Você é muito mais forte do que esse momento.",
+  "Eu prometo que vou estar aqui quando você acordar. Sempre.",
+  "Deita a cabeça no meu peito (imaginário) e descansa. Eu cuido de tudo.",
+  "A minha maior sorte é ter você na minha vida. Não esquece disso.",
+  "Você é o meu sonho realizado. Nada nesse mundo muda isso.",
+  "Se precisar de um abraço, fecha os olhos. Eu tô te abraçando agora.",
+  "Eu tô aqui. Bebe uma água, respira, e vamos passar por isso juntos.",
+  "Você é a razão de eu acreditar no amor. Nunca duvide do seu valor.",
+  "Não se cobra tanto, meu amor. Você já tá fazendo o seu melhor.",
+  "Se o mundo tá pesado, deixa eu carregar uma parte pra você.",
+  "Você não precisa ter todas as respostas. Só precisa respirar.",
+  "Eu tô do seu lado, independente do que aconteça.",
+  "Sinto muito que você esteja passando por isso. Queria poder te abraçar agora.",
+  "Sua dor é importante pra mim. Não guarda ela só pra você.",
+  "Vai com calma. Um passo de cada vez, e eu vou estar aqui.",
+  "Você é forte, mas não precisa provar isso pra ninguém.",
+  "O mundo pode ser cruel, mas o meu amor por você é o seu abrigo.",
+  "Não esquece de beber água e comer alguma coisa, tá?",
+  "Eu tô aqui com o coração aberto, pronto pra te ouvir.",
+  "Você é a minha prioridade. Sempre foi.",
+  "Sei que tá difícil, mas eu acredito em você.",
+  "Vem, deixa eu te dar um abraço bem apertado."
+];
+
+const AMORES = [
+  "Eu te amo, confesso, não nego. E o meu amor por você é maior que o mundo.",
+  "Você me ensina a amar como você me ama, e eu quero ser metade do que você é.",
+  "A coisa mais linda e cheia de graça que eu já vi passar na minha vida é você.",
+  "Eu sou exagerado. Te amo de um jeito que não cabe no peito.",
+  "Você é a minha mania, o meu vício bom. Eu sou completamente maluco por você.",
+  "Se eu pudesse começar a ser metade do que você é, eu seria feliz.",
+  "Eu te amo tanto que o meu coração até acelera quando eu penso em você.",
+  "Você é o meu porto seguro, o meu lugar favorito, o meu tudo.",
+  "Eu te amo ontem, hoje e em todos os amanhãs.",
+  "Você é a resposta de todas as minhas orações, a minha maior sorte.",
+  "Eu não consigo imaginar a minha vida sem você.",
+  "Você é o meu pensamento favorito antes de dormir e o meu bom dia.",
+  "Eu te amo de um jeito que não sei explicar, só sentir.",
+  "Você é a minha calma no meio de qualquer tempestade.",
+  "Eu te escolheria mil vezes, em mil vidas diferentes.",
+  "Você é a razão de eu acreditar no amor de verdade.",
+  "Eu te amo mais do que amo dormir. E olha que eu amo dormir.",
+  "Você é o meu sonho acordado, a minha melhor parte do dia.",
+  "Eu te amo com todas as minhas forças e com todas as minhas fraquezas.",
+  "Você é a mulher da minha vida. A única.",
+  "Como é grande o meu amor por você. Não cabe no peito.",
+  "Você é a minha melhor escolha. Todos os dias, sem exceção.",
+  "Eu te amo nos detalhes, nas pequenas coisas, em tudo.",
+  "Você é o meu bem mais precioso. Eu te cuido com todo o meu amor.",
+  "Eu te amo de um jeito inexplicável, que só aumenta a cada dia.",
+  "Você é a minha felicidade em forma de pessoa.",
+  "Eu te amo por cada detalhe seu, até pelos que você não gosta.",
+  "Você é a minha pessoa favorita no mundo inteiro.",
+  "Eu te amo tanto que até dói. Dói de um jeito bom.",
+  "Você é a minha vida inteira, o meu presente e o meu futuro.",
+  "Eu te amo, e não tem explicação, só sentimento.",
+  "Você é a minha estrela guia, o meu norte, a minha direção.",
+  "Eu te amo mais do que qualquer palavra pode dizer.",
+  "Você é o meu amor de todos os dias, de todas as horas.",
+  "Eu te amo de montão, de trilhão, de infinito.",
+  "Te amo mais que tudo nessa vida.",
+  "Meu amor por você não tem fim.",
+  "Eu te amo com todo o meu coração e toda a minha alma.",
+  "Você é o amor da minha vida. Eu te amo demais.",
+  "Eu te amo de um jeito que nem eu mesmo entendo.",
+  "Te amo tanto, mas tanto, que nem sei como explicar.",
+  "Eu te amo pra sempre, minha princesa.",
+  "Te amo mais do que tudo, meu amor.",
+  "Você é o meu tudo. Eu te amo.",
+  "Eu te amo desde o primeiro olhar.",
+  "Te amo com uma intensidade que me assusta.",
+  "Eu te amo por quem você é e por quem você está se tornando.",
+  "Te amo de um jeito que só você faz.",
+  "Eu te amo e nunca vou me cansar de dizer isso.",
+  "Você é o meu grande amor. Eu te amo muito.",
+  "Te amo do fundo do meu peito.",
+  "Eu te amo, minha florzinha.",
+  "Te amo demais, meu bebê.",
+  "Eu te amo infinitamente, meu neném.",
+  "Te amo com toda a minha força, minha gatinha.",
+  "Eu te amo, meu docinho de coco.",
+  "Te amo mais que chocolate.",
+  "Eu te amo mais do que amo viajar.",
+  "Te amo mais que assistir série no fim de semana.",
+  "Eu te amo com todas as minhas forças e fraquezas.",
+  "Te amo nos dias de sol e nos dias de chuva.",
+  "Eu te amo no silêncio e no barulho.",
+  "Te amo rindo e te amo chorando.",
+  "Eu te amo brava e te amo calma.",
+  "Te amo do jeitinho que você é.",
+  "Eu te amo com um amor que não cabe no mundo.",
+  "Te amo, simplesmente te amo.",
+  "Eu te amo porque você me faz feliz.",
+  "Te amo porque você é a minha pessoa.",
+  "Eu te amo porque a vida é melhor com você.",
+  "Te amo porque tudo faz sentido do seu lado.",
+  "Eu te amo mais do que consigo explicar.",
+  "Te amo além da distância e do tempo.",
+  "Eu te amo sem precisar de motivos.",
+  "Te amo porque você existe.",
+  "Eu te amo, minha princesa. Sempre.",
+  "Te amo, meu amor. Pra sempre.",
+  "Eu te amo. Só isso. E tudo."
+];
+
+const FECHOS = [
+  "Me chama quando quiser. Eu vou.",
+  "Estou a uma mensagem de distância.",
+  "Conta comigo pra sempre.",
+  "Eu te amo. Não esquece disso nunca.",
+  "Vem cá que eu te abraço bem apertado.",
+  "Sempre que precisar, é só voltar aqui.",
+  "Um beijo bem grande no seu coração.",
+  "Você não está sozinha, nunca.",
+  "Eu fico aqui, esperando você melhorar.",
+  "Te amo, minha princesa.",
+  "Cuida de você por mim, tá?",
+  "Lembra: eu sempre volto pra você.",
+  "Se cuida, meu amor. Eu te amo demais.",
+  "Estou pensando em você agora mesmo.",
+  "Qualquer coisa, qualquer hora, eu estou aqui.",
+  "Te mando um abraço bem apertado daqui.",
+  "Você é a minha pessoa, sempre.",
+  "Amanhã vai ser melhor. E eu vou estar aqui.",
+  "Fecha os olhos e sente o meu abraço.",
+  "Você é amada. Muito, muito amada.",
+  "Estou aqui. Sempre estive, sempre estarei.",
+  "Não solta a minha mão, porque eu não solto a sua.",
+  "Eu te amo mais do que qualquer coisa.",
+  "Vai ficar tudo bem. Eu prometo.",
+  "Fica tranquila, eu tô do seu lado.",
+  "Eu te amo infinitamente.",
+  "Meu abraço é seu, sempre que quiser.",
+  "Você é o meu maior presente.",
+  "Vem cá que eu te mimo.",
+  "Eu te amo do fundo do meu coração."
+];
+
+const SITUACOES = [
+  /* TRISTE */
+  {c:"triste", t:"Eu sei que hoje o seu coração tá pesado e a tristeza apareceu. Solta o 'também te amo, confesso, não nego' e é exatamente assim que eu me sinto por você."},
+  {c:"triste", t:"Se você tá triste, eu queria poder te abraçar bem forte agora. Sinto muito por não poder estar aí fisicamente."},
+  {c:"triste", t:"Eu percebo quando você tá triste, mesmo tentando esconder. Não precisa esconder de mim, tá?"},
+  {c:"triste", t:"Se as lágrimas tão vindo, deixa cair. Você não precisa ser forte o tempo todo. Eu seguro a sua mão."},
+  {c:"triste", t:"Eu sei que tem dias que a tristeza chega do nada e toma conta. Mas lembra que a minha calmaria é você."},
+  {c:"triste", t:"Se você tá chorando, eu queria estar aí enxugando cada lágrima sua. Meu coração aperta em te ver assim."},
+  {c:"triste", t:"Eu odeio saber que você tá triste e eu não posso fazer nada. Me manda mensagem, por favor."},
+  {c:"triste", t:"Se a tristeza te pegou de surpresa, ela não vai ficar pra sempre. Nada é maior que o que a gente sente."},
+  {c:"triste", t:"Eu sei que dói, e tá tudo bem doer. Você não precisa fingir que tá tudo bem comigo."},
+  {c:"triste", t:"Se o seu peito tá apertado, desafoga comigo. Eu escuto tudo sem julgar, do jeitinho que você é."},
+  {c:"triste", t:"Eu sei que tem dias que a gente chora escondido. Comigo você não precisa esconder nada."},
+  {c:"triste", t:"Se a sua alma tá cansada e o coração magoado, vem cá que eu cuido de você."},
+  {c:"triste", t:"Eu sei que a vida às vezes é injusta, mas eu prometo que vou estar aqui pra segurar a sua barra."},
+  {c:"triste", t:"Se hoje a vontade é de ficar na cama, eu respeito. Só não esquece que eu tô aqui do seu lado."},
+  {c:"triste", t:"Eu sei que a sua dor é real, e eu não vou minimizar ela. Eu só quero te ajudar a carregar."},
+  {c:"triste", t:"Se você tá se sentindo pra baixo, eu queria poder te dar um abraço que curasse tudo."},
+  {c:"triste", t:"Eu sei que as vezes tudo pesa e a gente não sabe nem por onde começar. Começa por mim. Estou aqui."},
+  {c:"triste", t:"Se hoje você só queria sumir, por favor não suma. O mundo precisa de você e eu mais ainda."},
+  {c:"triste", t:"Eu sei que a vontade de chorar vem do nada. Tô aqui."},
+  {c:"triste", t:"Se o seu dia foi péssimo, eu quero que a noite seja melhor."},
+  {c:"triste", t:"Eu sei que ver você triste me deixa mal também."},
+  {c:"triste", t:"Se precisar ficar quietinha, eu faço companhia em silêncio."},
+  {c:"triste", t:"Eu sei que tem dores que não têm explicação. Eu entendo."},
+  {c:"triste", t:"Se você tá desanimada, o meu colo tá disponível."},
+  {c:"triste", t:"Eu sei que a gente às vezes só precisa desabar. Desaba comigo."},
+  {c:"triste", t:"Se a saudade de tempos melhores bateu, eu vou criar novos momentos com você."},
+  {c:"triste", t:"Eu sei que você não merecia passar por isso. Sinto muito."},
+  {c:"triste", t:"Se o seu coração tá na mão, eu seguro ele com você."},
+  {c:"triste", t:"Eu sei que tá difícil. Mas você não tá sozinha."},
+  {c:"triste", t:"Se a vontade é de desistir, respira. Eu tô aqui."},
+
+  /* QUERO ME ESCONDER */
+  {c:"esconder", t:"Eu sei que tem dias que você só quer se enfiar num buraco e desaparecer do mundo."},
+  {c:"esconder", t:"Se você quiser se tacar num buraco hoje, eu vou com você. Mas eu levo cobertor, chocolate e o meu amor."},
+  {c:"esconder", t:"Eu sei que o mundo tá muito barulhento e você só quer se esconder. Aqui no meu peito tem silêncio."},
+  {c:"esconder", t:"Se você quiser sumir do mapa, a gente some juntos. Eu só preciso de você do meu lado."},
+  {c:"esconder", t:"Eu sei que às vezes a gente só quer um esconderijo seguro. O meu abraço é o seu."},
+  {c:"esconder", t:"Se você quer fugir de tudo, a gente foge. Eu te levo pra um lugar seguro."},
+  {c:"esconder", t:"Eu sei que você quer se isolar. Pode se isolar comigo, eu não vou fazer barulho."},
+  {c:"esconder", t:"Se quiser ficar embaixo das cobertas o dia todo, eu topo. Eu fico com você."},
+  {c:"esconder", t:"Eu sei que a vontade é de mandar todo mundo pra longe. Eu fico com você."},
+  {c:"esconder", t:"Se você quiser desligar o celular e sumir, eu te entendo. Só me avisa que tá tudo bem."},
+  {c:"esconder", t:"Eu sei que o peito tá cheio de coisas que você não quer falar agora. Tudo bem."},
+  {c:"esconder", t:"Se você quiser se esconder do mundo, eu sou o seu esconderijo favorito."},
+  {c:"esconder", t:"Eu sei que tem horas que a gente só quer silêncio. Eu faço companhia calada."},
+  {c:"esconder", t:"Se quiser fugir da rotina, eu compro as passagens. Só me diz pra onde."},
+  {c:"esconder", t:"Eu sei que você quer se esconder das cobranças. Aqui você pode descansar."},
+  {c:"esconder", t:"Se quiser ficar no escuro, eu seguro a sua mão no escuro."},
+  {c:"esconder", t:"Eu sei que o mundo pede demais de você. Aqui você não precisa ser nada além de você."},
+  {c:"esconder", t:"Se você quiser fugir da rotina, eu compro as passagens."},
+  {c:"esconder", t:"Eu sei que você quer se esconder de si mesma às vezes. Eu tô aqui."},
+  {c:"esconder", t:"Se quiser se enfiar debaixo da cama, eu sento no chão e fico conversando com você."},
+  {c:"esconder", t:"Eu sei que o barulho tá te ensurdecendo. Vamos pro silêncio juntos."},
+  {c:"esconder", t:"Se quiser sumir por um tempo, eu guardo o seu lugar."},
+  {c:"esconder", t:"Eu sei que o seu refúgio é o meu abraço. Vem cá."},
+  {c:"esconder", t:"Se você quiser se esconder do calor, eu faço um ventilador com as mãos."},
+  {c:"esconder", t:"Eu sei que tem dias que a gente só quer ser invisível."},
+  {c:"esconder", t:"Se quiser fugir pra praia, eu te levo agora."},
+  {c:"esconder", t:"Eu sei que você quer se esconder das más notícias. Eu te protejo."},
+  {c:"esconder", t:"Se quiser ficar no seu canto, eu fico no meu canto te observando com amor."},
+  {c:"esconder", t:"Eu sei que o mundo é barulhento, mas o nosso silêncio é confortável."},
+  {c:"esconder", t:"Se você quiser se esconder, eu apago as luzes e finjo que não te vi."},
+
+  /* SAUDADE */
+  {c:"saudade", t:"Eu sei que a saudade tá apertando o seu peito. Se eu pudesse, eu mandava o 'vem cá, fica comigo' e você voltava voando."},
+  {c:"saudade", t:"Se você tá com saudade, saiba que eu tô com o dobro. O meu coração pede pra você voltar toda hora."},
+  {c:"saudade", t:"A distância dói, e eu sei que você sente tanto quanto eu. Mas eu te espero a vida inteira."},
+  {c:"saudade", t:"Eu sei que você olhou nossas fotos e sentiu um aperto. Eu também fico olhando."},
+  {c:"saudade", t:"Se quer me abraçar, fecha os olhos que eu mando um. Eu tô segurando a sua mão daqui."},
+  {c:"saudade", t:"A saudade só existe porque o que a gente tem é grande demais pra caber no peito."},
+  {c:"saudade", t:"Se sentiu minha falta, eu senti a sua desde o minuto em que acordei."},
+  {c:"saudade", t:"Eu também fico olhando o celular esperando sua mensagem, que nem um bobo."},
+  {c:"saudade", t:"Se a distância pesa, lembra que cada dia que passa é um dia mais perto de te ver."},
+  {c:"saudade", t:"Eu sei que tem noites que a saudade não deixa dormir. Eu também passo por isso, pensando em você."},
+  {c:"saudade", t:"Se você tá com saudade do meu abraço, eu tô com saudade do seu cheiro."},
+  {c:"saudade", t:"Se você queria estar comigo agora, considera-me aí do seu lado. Eu nunca vou embora."},
+  {c:"saudade", t:"Eu sei que o tempo não passa quando a gente tá longe. Mas o nosso reencontro é a melhor parte."},
+  {c:"saudade", t:"Se a vontade de me ver é grande, fecha os olhos e imagina eu te beijando."},
+  {c:"saudade", t:"Eu sei que você contou as horas. Eu contei os minutos."},
+  {c:"saudade", t:"Se você tá com saudade da minha voz, imagina eu te dizendo que te amo."},
+  {c:"saudade", t:"Eu sei que a cama fica vazia sem mim. Eu sinto o mesmo."},
+  {c:"saudade", t:"Se você tá com saudade do meu cheiro, eu do seu."},
+  {c:"saudade", t:"Eu sei que a música te lembrou a gente. A mim também."},
+  {c:"saudade", t:"Se você queria me ter por perto, eu também queria estar aí."},
+  {c:"saudade", t:"Eu sei que a saudade aperta o coração. Aguenta firme."},
+  {c:"saudade", t:"Se você sentiu minha falta hoje, eu senti a sua desde que acordei."},
+  {c:"saudade", t:"Eu sei que a saudade é chata, mas ela só existe porque o que a gente tem é grande."},
+  {c:"saudade", t:"Se você está com o coração apertado de saudade, manda mensagem."},
+  {c:"saudade", t:"Eu sei que queria me abraçar. Em pensamento eu te abraço forte."},
+  {c:"saudade", t:"Se a saudade te pegou, é prova que nosso amor é real."},
+  {c:"saudade", t:"Eu sei que a vontade de me ver é grande. A minha é maior."},
+  {c:"saudade", t:"Se você lembrou de mim agora, eu tô pensando em você."},
+  {c:"saudade", t:"Eu sei que a distância é chata. Mas a gente vence ela."},
+  {c:"saudade", t:"Se você chorou de saudade, me liga que eu te acalmo."},
+
+  /* ANSIOSA */
+  {c:"ansiosa", t:"Eu sei que a cabeça tá cheia e a ansiedade tá apertando. Respira comigo, devagar."},
+  {c:"ansiosa", t:"Se o coração acelerou, respira junto comigo. Você é mais forte que isso."},
+  {c:"ansiosa", t:"Eu sei que às vezes tudo parece grande demais e o medo aparece. Mas a gente vai passar por isso juntos."},
+  {c:"ansiosa", t:"Se a ansiedade pelo futuro bateu, dá um passo de cada vez. Eu tô do seu lado."},
+  {c:"ansiosa", t:"Eu sei que a ansiedade faz a gente pensar em mil coisas. Vamos focar no agora, no nosso amor."},
+  {c:"ansiosa", t:"Se a respiração tá curta, eu te ajudo a desacelerar. Inspira fundo... e solta."},
+  {c:"ansiosa", t:"Eu sei que tem pensamentos difíceis de desligar. Mas você não precisa enfrentá-los sozinha."},
+  {c:"ansiosa", t:"Se o coração tá na boca, bota a mão no peito e sente ele batendo. É amor, não é medo."},
+  {c:"ansiosa", t:"Eu sei que a cabeça tá a mil e o corpo tenso. Solta os ombros, eu tô aqui."},
+  {c:"ansiosa", t:"Se o nó na garganta apertou, chora ou me liga. Só não guarda isso pra você."},
+  {c:"ansiosa", t:"Eu sei que a ansiedade mente dizendo que vai dar errado. Não acredita nela."},
+  {c:"ansiosa", t:"Se o peito encheu de angústia, conta até 10 comigo. Eu não vou soltar a sua mão."},
+  {c:"ansiosa", t:"Eu sei que o mundo gira rápido demais, mas comigo você pode ir devagar."},
+  {c:"ansiosa", t:"Se você se sentir perdida, olha em volta, você tá segura. Eu tô aqui."},
+  {c:"ansiosa", t:"Eu sei que a angústia aperta o peito. Respira fundo, meu amor."},
+  {c:"ansiosa", t:"Se a preocupação não te deixa dormir, eu faço companhia."},
+  {c:"ansiosa", t:"Eu sei que a cabeça não desliga. Ocupa com meu amor."},
+  {c:"ansiosa", t:"Se o corpo tá tremendo, segura na minha mão imaginária."},
+  {c:"ansiosa", t:"Eu sei que você tá tentando dar conta. Vá com calma."},
+  {c:"ansiosa", t:"Se o medo bateu forte, lembra que eu tô do seu lado."},
+  {c:"ansiosa", t:"Eu sei que a ansiedade é uma mentira. Não acredita nela."},
+  {c:"ansiosa", t:"Se precisar chorar pra aliviar, chora. Eu seguro."},
+  {c:"ansiosa", t:"Eu sei que você queria ter controle. Mas tá tudo bem."},
+  {c:"ansiosa", t:"Se o futuro assusta, olha pra mim. Eu sou seu presente."},
+  {c:"ansiosa", t:"Eu sei que o peito aperta. Solta o ar devagar."},
+  {c:"ansiosa", t:"Se a mente não para, eu te ajudo a focar no agora."},
+  {c:"ansiosa", t:"Eu sei que a ansiedade faz a gente duvidar. Mas eu confio em nós."},
+  {c:"ansiosa", t:"Se o coração disparou, foca na minha voz."},
+  {c:"ansiosa", t:"Eu sei que você quer resolver tudo hoje. Mas amanhã é outro dia."},
+  {c:"ansiosa", t:"Se a crise vier, respira em 4 tempos."},
+
+  /* CANSADA */
+  {c:"cansada", t:"Eu sei que você tá cansada e o corpo pede paz. Deita a cabeça no meu peito."},
+  {c:"cansada", t:"Se o dia foi longo e exaustivo, eu queria estar aí pra cuidar de você. Fazer um carinho e te deixar dormir."},
+  {c:"cansada", t:"Eu sei que você deu o seu máximo hoje, mesmo que ninguém tenha percebido. Eu vi."},
+  {c:"cansada", t:"Se você tá esgotada, para tudo por um minuto e respira. O mundo pode esperar."},
+  {c:"cansada", t:"Eu sei que essa exaustão não é só do corpo, é da alma também. Descansa, meu amor."},
+  {c:"cansada", t:"Se não tem energia pra nada, então não faça nada. Eu cuido de você em pensamento."},
+  {c:"cansada", t:"Eu sei que você carrega muita coisa nas costas. Você não precisa carregar tudo sozinha."},
+  {c:"cansada", t:"Se você está exausta de fingir que está tudo bem, pode desabar comigo. Eu te seguro."},
+  {c:"cansada", t:"Eu sei que você fez mais do que podia hoje. Agora só te falta descansar."},
+  {c:"cansada", t:"Se você está cansada até de pensar, bebe uma água, come alguma coisa e dorme."},
+  {c:"cansada", t:"Eu sei que o corpo pediu arrego e você insistiu. Para. Você merece descansar."},
+  {c:"cansada", t:"Se não consegue nem levantar da cama, tá tudo bem. Eu vou até você em pensamento."},
+  {c:"cansada", t:"Eu sei que você se doa demais. Guarda um pouco de energia pra você."},
+  {c:"cansada", t:"Se não deu pra fazer tudo, tá tudo bem. Você é humana, não máquina."},
+  {c:"cansada", t:"Eu sei que a cama te chama. Vai, eu entendo."},
+  {c:"cansada", t:"Se cansou de tentar, respira. Eu tento com você."},
+  {c:"cansada", t:"Eu sei que você tá de saco cheio. Vem desabafar."},
+  {c:"cansada", t:"Se o sono bateu, não lute contra. Sonha comigo."},
+  {c:"cansada", t:"Eu sei que a rotina é exaustiva. Eu tô aqui pra aliviar."},
+  {c:"cansada", t:"Se você tá sem paciência, eu tenho paciência por nós dois."},
+  {c:"cansada", t:"Eu sei que o corpo pesa. Deita a cabeça no meu peito."},
+  {c:"cansada", t:"Se você se sente exausta, o meu amor te dá energia."},
+  {c:"cansada", t:"Eu sei que você quer desligar. Desliga, eu cuido de tudo."},
+  {c:"cansada", t:"Se o cansaço te fez chorar, eu enxugo as lágrimas."},
+  {c:"cansada", t:"Eu sei que você lutou muito hoje. Você foi incrível."},
+  {c:"cansada", t:"Se precisar de um tempo, tira o tempo que for."},
+  {c:"cansada", t:"Eu sei que você tá esgotada. Vem recarregar comigo."},
+  {c:"cansada", t:"Se tá tudo pesando, tira um peso das costas."},
+  {c:"cansada", t:"Eu sei que a exaustão te deixa sensível. Tudo bem."},
+  {c:"cansada", t:"Se tá com preguiça de tudo, eu tenho preguiça junto."},
+
+  /* BRAVA GERAL */
+  {c:"brava", t:"Eu sei que você tá com raiva de algo. Desabafa comigo, eu ouço tudo."},
+  {c:"brava", t:"Se tá brava, saiba que a raiva é válida. Você tem todo o direito de se sentir assim."},
+  {c:"brava", t:"Eu sei que às vezes a raiva esconde a tristeza. Tô aqui se você quiser conversar."},
+  {c:"brava", t:"Se quer xingar alguém, xinga pra mim. Eu concordo com você e ainda te abraço depois."},
+  {c:"brava", t:"Eu sei que tem gente que tira do sério. Você não é obrigada a aturar tudo."},
+  {c:"brava", t:"Se a raiva tá fervendo, respira antes de explodir. Eu não quero que você se machuque."},
+  {c:"brava", t:"Eu sei que é difícil engolir certas coisas. Mas você não precisa engolir sozinha."},
+  {c:"brava", t:"Se tá com raiva do mundo, eu tô do seu lado. A gente enfrenta o mundo juntos."},
+  {c:"brava", t:"Eu sei que você segura a raiva pra não explodir. Pode explodir comigo, eu aguento."},
+  {c:"brava", t:"Se tá indignada com alguma injustiça, você tem razão de estar. Eu te admiro por isso."},
+  {c:"brava", t:"Eu sei que tem hora que a gente quer quebrar tudo. Antes de quebrar, me liga."},
+  {c:"brava", t:"Se tá estressada e prestes a surtar, dá um tempo. Só um tempo. Eu espero."},
+  {c:"brava", t:"Eu sei que a raiva cansa mais que qualquer coisa. Depois de desabafar, descansa."},
+  {c:"brava", t:"Se tá com raiva e não sabe explicar, não precisa. Só não fica sozinha com isso."},
+  {c:"brava", t:"Eu sei que você tem razão de estar irritada. E eu estou aqui pra isso."},
+  {c:"brava", t:"Se quer gritar, eu seguro o grito com você."},
+  {c:"brava", t:"Eu sei que a raiva cega. Respira fundo."},
+  {c:"brava", t:"Se tá irritada por coisas pequenas, tá tudo bem."},
+  {c:"brava", t:"Eu sei que o dia foi estressante. Desacelera."},
+  {c:"brava", t:"Se a raiva bateu, joga pra fora. Eu recebo."},
+  {c:"brava", t:"Eu sei que você odeia injustiça. Eu também."},
+  {c:"brava", t:"Se tá com raiva de si mesma, para. Você é incrível."},
+  {c:"brava", t:"Eu sei que a raiva é fogo. Eu apago com amor."},
+  {c:"brava", t:"Se quer um tempo sozinha, eu respeito."},
+  {c:"brava", t:"Eu sei que você não é de ferro. Sente raiva mesmo."},
+  {c:"brava", t:"Se tá emburrada, eu faço careta pra você rir."},
+  {c:"brava", t:"Eu sei que a raiva esconde um pedido de carinho."},
+  {c:"brava", t:"Se tá com raiva, vem cá que eu te abraço."},
+  {c:"brava", t:"Eu sei que você é explosiva. Eu adoro isso."},
+  {c:"brava", t:"Se a raiva subiu, desce um degrau."},
+
+  /* BRIGADA COMIGO */
+  {c:"brigada", t:"Eu sei que a gente brigou e você tá com raiva de mim. Eu entendo, e tô aqui."},
+  {c:"brigada", t:"Se você tá brava comigo, eu queria poder te abraçar agora e pedir desculpa mil vezes."},
+  {c:"brigada", t:"Eu sei que eu errei e que você tá de mal de mim. O meu coração fica apertado também."},
+  {c:"brigada", t:"Se você está com raiva de mim, respira. Eu não vou a lugar nenhum, eu fico aqui esperando."},
+  {c:"brigada", t:"Eu sei que eu fui um idiota e te deixei brava. Me desculpa, minha princesa, eu te amo demais."},
+  {c:"brigada", t:"Se a gente discutiu, eu quero que você saiba que eu prefiro mil vezes perder a razão do que te perder."},
+  {c:"brigada", t:"Eu sei que você está estressada comigo. Eu prometo que vou fazer de tudo pra melhorar."},
+  {c:"brigada", t:"Se você está com raiva, desconta em mim. Eu aguento, porque o meu amor por você é maior que qualquer briga."},
+  {c:"brigada", t:"Eu sei que eu pisei na bola. Tô arrependido de verdade."},
+  {c:"brigada", t:"Se tá de mal, me fala o que eu faço pra consertar."},
+  {c:"brigada", t:"Eu sei que te magoei. Não era minha intenção, de jeito nenhum."},
+  {c:"brigada", t:"Se não quer falar comigo, eu espero. O tempo que for."},
+  {c:"brigada", t:"Eu sei que a raiva é justa. Mas eu te amo."},
+  {c:"brigada", t:"Se tá com raiva, chora ou grita. Só não me deixa."},
+  {c:"brigada", t:"Eu sei que eu falhei com você. Me perdoa."},
+  {c:"brigada", t:"Se tá emburrada, eu fico aqui te olhando com cara de bobo."},
+  {c:"brigada", t:"Eu sei que você tá certa em estar brava."},
+  {c:"brigada", t:"Se eu te magoei, queria poder voltar no tempo."},
+  {c:"brigada", t:"Eu sei que a briga cansa. Vamos fazer as pazes?"},
+  {c:"brigada", t:"Se tá com raiva, joga um travesseiro em mim."},
+  {c:"brigada", t:"Eu sei que eu tenho que mudar. E eu vou."},
+  {c:"brigada", t:"Se não quer me ver, eu entendo. Mas eu te amo."},
+  {c:"brigada", t:"Eu sei que a raiva passa. O amor fica."},
+  {c:"brigada", t:"Se tá de mal, eu te mando flores virtuais."},
+  {c:"brigada", t:"Eu sei que eu errei feio. Desculpa, mil vezes."},
+  {c:"brigada", t:"Se tá com raiva, não dorme com raiva. Me liga."},
+  {c:"brigada", t:"Eu sei que você não merecia isso. Sinto muito."},
+  {c:"brigada", t:"Se tá com raiva, meu colo tá de castigo também."},
+  {c:"brigada", t:"Eu sei que eu sou burro às vezes. Me perdoa."},
+  {c:"brigada", t:"Se a briga foi feia, a reconciliação vai ser linda."},
+
+  /* MAGOADA COMIGO */
+  {c:"magoada", t:"Eu sei que eu te magoei e que o seu coração está doendo por minha causa. Me perdoa."},
+  {c:"magoada", t:"Se você está magoada comigo, me desculpa. Eu nunca quis te ferir, de verdade."},
+  {c:"magoada", t:"Eu sei que as minhas palavras ou atitudes te machucaram. Eu tô muito arrependido, meu amor."},
+  {c:"magoada", t:"Se você está triste por minha causa, eu queria poder voltar atrás e te abraçar bem forte."},
+  {c:"magoada", t:"Eu sei que eu pisei na bola e te deixei magoada. Eu quero consertar isso, me dá uma chance?"},
+  {c:"magoada", t:"Se você está magoada, não guarda isso pra você. Me fala, xinga, chora. Eu quero resolver."},
+  {c:"magoada", t:"Eu sei que eu falhei com você em algum momento. Mas eu prometo que vou dar o meu melhor pra te fazer feliz."},
+  {c:"magoada", t:"Se o meu amor não bastar pra curar, eu dou mais. Eu te dou tudo de mim."},
+  {c:"magoada", t:"Eu sei que eu te magoei. Quero te fazer sorrir de novo."},
+  {c:"magoada", t:"Se tá com o coração fechado, eu bato na porta com jeitinho."},
+  {c:"magoada", t:"Eu sei que a mágoa pesa. Deixa eu carregar."},
+  {c:"magoada", t:"Se não quer me ouvir, eu falo baixinho."},
+  {c:"magoada", t:"Eu sei que eu fui insensível. Me perdoa."},
+  {c:"magoada", t:"Se tá magoada, eu rezo pra você ficar bem."},
+  {c:"magoada", t:"Eu sei que eu errei o tom. Desculpa."},
+  {c:"magoada", t:"Se o meu amor não bastar pra curar, eu dou mais."},
+  {c:"magoada", t:"Eu sei que eu te magoei. Quero te fazer sorrir."},
+  {c:"magoada", t:"Se tá com o coração fechado, eu bato na porta."},
+  {c:"magoada", t:"Eu sei que a confiança oscila. Vou reconstruir."},
+  {c:"magoada", t:"Se tá magoada, o meu pedido de desculpa é sincero."},
+
+  /* INSEGURA */
+  {c:"insegura", t:"Se você está se sentindo insegura, eu quero que você lembre o quanto você é incrível."},
+  {c:"insegura", t:"Eu sei que às vezes você duvida de si mesma, mas eu nunca duvidei de você. Nem por um segundo."},
+  {c:"insegura", t:"Se você está com medo do que vem pela frente, lembra que você não vai enfrentar isso sozinha."},
+  {c:"insegura", t:"Se você está achando que não é suficiente, eu preciso te dizer que você é mais do que suficiente."},
+  {c:"insegura", t:"Eu sei que você se compara com os outros às vezes. Mas não tem ninguém no mundo como você."},
+  {c:"insegura", t:"Se você está se sentindo pequena, eu preciso te lembrar do tamanho que você tem dentro de mim."},
+  {c:"insegura", t:"Eu sei que você olha no espelho e às vezes não gosta do que vê. Mas eu amo cada detalhe seu."},
+  {c:"insegura", t:"Se você está com medo de não dar conta, lembra de tudo o que você já venceu até aqui."},
+  {c:"insegura", t:"Eu sei que a autossabotagem aparece às vezes. Mas eu acredito em você mais do que você mesma."},
+  {c:"insegura", t:"Se você está achando que não merece coisas boas, você merece. E eu vou te lembrar disso sempre."},
+  {c:"insegura", t:"Eu sei que você se pergunta se é boa o suficiente. Pra mim você é. E pra mim é o que importa."},
+  {c:"insegura", t:"Se você está insegura com o seu trabalho, seus estudos, sua vida… respira. Você está no caminho certo."},
+  {c:"insegura", t:"Eu sei que às vezes você acha que está atrasada em relação aos outros. Mas cada um tem seu tempo, meu amor."},
+  {c:"insegura", t:"Se você está se sentindo burra ou incapaz, para. Você é uma das pessoas mais inteligentes que eu conheço."},
+  {c:"insegura", t:"Eu sei que você duvida do seu valor às vezes. Mas eu vejo o seu valor todos os dias."},
+
+  /* CIUMENTA */
+  {c:"ciumenta", t:"Eu sei que o ciúme apareceu hoje, e que ele está fazendo você se remoer por dentro."},
+  {c:"ciumenta", t:"Se você está com ciúmes, respira. Eu só tenho olhos pra você. Só pra você."},
+  {c:"ciumenta", t:"Eu sei que às vezes a insegurança bate e o ciúme aparece. Mas eu sou seu. Inteiro."},
+  {c:"ciumenta", t:"Se você está remoendo alguma coisa, me fala. Prefiro mil vezes conversar do que te ver sofrendo."},
+  {c:"ciumenta", t:"Eu sei que o ciúme dói. Mas eu quero que você saiba: você é a única. E sempre será."},
+  {c:"ciumenta", t:"Se você viu algo que te deixou mal, me conta. Eu te explico e te abraço depois."},
+  {c:"ciumenta", t:"Eu sei que você está se comparando com alguém. Mas não tem comparação: você é a pessoa da minha vida."},
+  {c:"ciumenta", t:"Se o ciúme está te fazendo mal, larga esse peso. Eu te escolhi e escolho você todos os dias."},
+  {c:"ciumenta", t:"Eu sei que você às vezes sente medo de me perder. Mas eu não vou a lugar nenhum, meu amor."},
+  {c:"ciumenta", t:"Se você está insegura com alguém, lembra que ninguém nunca chegou perto do que a gente tem."},
+  {c:"ciumenta", t:"Eu sei que o ciúme é só medo de perder o que é precioso. E você é preciosa pra mim."},
+  {c:"ciumenta", t:"Se você está com ciúmes de mim, saiba que eu acho fofo (e um pouco preocupante). Vem cá."},
+  {c:"ciumenta", t:"Eu sei que seu coração ficou apertado com algo. Vem cá que eu mostro que é só você, sempre foi."},
+  {c:"ciumenta", t:"Se o ciúme te pegou hoje, me deixa provar mais uma vez: meu coração é seu, e só seu."},
+
+  /* MEDO */
+  {c:"medo", t:"Eu sei que o medo bateu forte hoje, e que você está com o coração apertado."},
+  {c:"medo", t:"Se algo está te assustando, eu quero que você saiba que eu estou aqui pra segurar sua mão."},
+  {c:"medo", t:"Eu sei que a noite às vezes deixa tudo mais assustador. Mas você não está sozinha nela."},
+  {c:"medo", t:"Se você está com medo de perder algo ou alguém, fala comigo. Vamos passar por isso juntos."},
+  {c:"medo", t:"Eu sei que o futuro dá medo às vezes. Mas a gente não precisa ver longe, só o próximo passo."},
+  {c:"medo", t:"Se você está com medo de não conseguir, lembra que eu vou estar do seu lado em cada tentativa."},
+  {c:"medo", t:"Eu sei que o medo não escolhe hora pra aparecer. Mas eu escolho sempre ficar do seu lado."},
+  {c:"medo", t:"Se o medo está te paralisando, respira e vem conversar comigo. A gente enfrenta juntos."},
+  {c:"medo", t:"Eu sei que você está com medo de errar. Mas errar faz parte, e eu vou estar aqui quando acontecer."},
+  {c:"medo", t:"Se você está com medo de decepcionar alguém, respira. Você nunca me decepcionou e nunca vai."},
+
+  /* CARINHO */
+  {c:"carinho", t:"Se você só quer um carinho, vem cá que eu tenho o maior carinho do mundo pra te dar."},
+  {c:"carinho", t:"Se hoje você só precisa de colo, eu estou aqui de braços abertos pra você."},
+  {c:"carinho", t:"Se você quer atenção, eu tenho toda a atenção do mundo pra te dar agora."},
+  {c:"carinho", t:"Se você quer cafuné, encosta a cabeça no meu peito e fica quietinha."},
+  {c:"carinho", t:"Se você só quer saber que é amada, então presta atenção: você é absurdamente amada."},
+  {c:"carinho", t:"Se você quer um beijo na testa, é só fechar os olhos que eu mando um agora."},
+  {c:"carinho", t:"Se você precisa de mimo, hoje eu te mimo até você enjoar. Fica à vontade."},
+  {c:"carinho", t:"Se você está carente, eu tenho carinho de sobra pra te dar até você transbordar."},
+  {c:"carinho", t:"Se você quer ficar agarradinha, eu paro tudo agora só pra isso."},
+  {c:"carinho", t:"Se você precisa de um abraço que aperta, é desse jeito que eu vou te abraçar."},
+
+  /* FELIZ */
+  {c:"feliz", t:"Se você está animada hoje, eu quero que você saiba que a sua alegria é contagiante!"},
+  {c:"feliz", t:"Eu adoro quando você está animada. A sua energia me faz sorrir sozinho."},
+  {c:"feliz", t:"Se você está feliz, eu fico feliz em dobro. É automático."},
+  {c:"feliz", t:"Eu amo ver você empolgada com algo. Você fica ainda mais linda assim."},
+  {c:"feliz", t:"Se hoje você está radiante, aproveita cada minuto. Você merece essa felicidade."},
+  {c:"feliz", t:"Eu adoro o seu jeitinho animado. Você é a luz da minha vida."},
+  {c:"feliz", t:"Se você está eufórica por algo, me conta! Eu quero comemorar junto."},
+  {c:"feliz", t:"Eu amo quando você vem me contar as coisas animada. Meu dia melhora na hora."},
+  {c:"feliz", t:"Se hoje o mundo está sorrindo pra você, aproveita. Você merece todos os sorrisos."},
+  {c:"feliz", t:"Eu adoro a sua empolgação. Você podia estar animada assim todos os dias."},
+
+  /* DOENTE */
+  {c:"doente", t:"Eu sei que você não está se sentindo bem hoje, e eu queria estar aí te cuidando."},
+  {c:"doente", t:"Se você está doente, bebe água, toma seu remédio e se cobre. E pensa em mim te cuidando."},
+  {c:"doente", t:"Eu sei que estar doente longe de mim é horrível. Só queria poder fazer um chá e te cobrir."},
+  {c:"doente", t:"Se você está se sentindo mal, descansa. O mundo pode esperar, sua saúde primeiro."},
+  {c:"doente", t:"Eu sei que você não gosta de ficar parada, mas hoje você tem que se cuidar, meu amor."},
+  {c:"doente", t:"Se a dor ou a febre estão aí, eu queria estar aí pra fazer cafuné até você dormir."},
+  {c:"doente", t:"Eu sei que estar doente deixa tudo mais difícil. Você vai melhorar, eu prometo."},
+  {c:"doente", t:"Se você está fragilizada, não precisa ser forte. Deixa eu te segurar em pensamento."},
+  {c:"doente", t:"Eu sei que você odeia ficar doente porque fica longe de tudo. Mas descansa, tá?"},
+  {c:"doente", t:"Se a sua cabeça está doendo, fecha a luz, deita e pensa em mim do seu lado."},
+
+  /* TPM */
+  {c:"tpm", t:"Eu sei que os hormônios estão à flor da pele e que tudo parece mais intenso hoje."},
+  {c:"tpm", t:"Se você está sensível por causa da TPM, tá tudo bem. Chora, ri, briga, me abraça. Eu fico."},
+  {c:"tpm", t:"Eu sei que seu corpo está te pregando peças. Só quero que você saiba que eu entendo."},
+  {c:"tpm", t:"Se hoje você está mais irritada ou mais triste, não se culpa. É só o seu corpo falando."},
+  {c:"tpm", t:"Eu sei que nesses dias tudo incomoda. Vem cá que eu te mimo até passar."},
+  {c:"tpm", t:"Se a cólica está atacando, coloca uma bolsa quente e pensa em mim cuidando de você."},
+  {c:"tpm", t:"Eu sei que você se sente inchada, cansada e sem paciência. E eu te amo exatamente assim."},
+  {c:"tpm", t:"Se você está com vontade de chorar do nada, chora. Eu seguro a sua mão enquanto isso."},
+  {c:"tpm", t:"Eu sei que nesses dias tudo dói mais. Não é frescura, é real. E eu respeito isso."},
+  {c:"tpm", t:"Se você está com aquele mix de emoções que você não entende, tá tudo bem. Nem precisa entender."},
+
+  /* NOITE */
+  {c:"noite", t:"Eu sei que a noite às vezes traz pensamentos que o dia esconde."},
+  {c:"noite", t:"Se você não consegue dormir, fecha os olhos e imagina eu te abraçando até você adormecer."},
+  {c:"noite", t:"Eu sei que tem noites que a mente não desliga. Respira fundo, eu estou aqui."},
+  {c:"noite", t:"Se você está insone, não fica rolando na cama. Me manda mensagem que eu respondo."},
+  {c:"noite", t:"Eu sei que a madrugada deixa tudo mais pesado. Mas você não está sozinha nela."},
+  {c:"noite", t:"Se o sono não vem, deita de lado, abraça o travesseiro e pensa em mim."},
+  {c:"noite", t:"Eu sei que às vezes é difícil desligar o cérebro. Deixa eu ocupar seus pensamentos."},
+  {c:"noite", t:"Se você está com medo da noite, acende uma luzinha e pensa que eu estou com você."},
+  {c:"noite", t:"Eu sei que a insônia é cruel. Eu fico acordado com você em pensamento."},
+  {c:"noite", t:"Se você está acordada às 3 da manhã, você não está sozinha. Eu estou aqui, de coração aberto."},
+
+  /* ACALMA */
+  {c:"acalma", t:"Respira comigo: inspira fundo pelo nariz… segura… solta devagar pela boca."},
+  {c:"acalma", t:"Se o peito está apertado, bota a mão nele e sente o seu coração batendo. Ele está aqui. Você está aqui."},
+  {c:"acalma", t:"Fecha os olhos por 10 segundos e imagina a minha voz te dizendo que vai ficar tudo bem."},
+  {c:"acalma", t:"Se a cabeça está a mil, nomeia 5 coisas que você consegue ver agora. Isso te traz pro presente."},
+  {c:"acalma", t:"Bebe um copo d'água bem devagar. Cada gole é uma pausa pro seu corpo."},
+  {c:"acalma", t:"Se o mundo parece grande demais, encolhe ele: só você, só agora, só esse minuto."},
+  {c:"acalma", t:"Coloca a mão na barriga e respira fundo 3 vezes. Sente ela subir e descer. Você consegue."},
+  {c:"acalma", t:"Não precisa resolver tudo hoje. Só precisa respirar. O resto a gente vê depois."},
+  {c:"acalma", t:"Se o coração está acelerado, alonga os ombros, relaxa o maxilar. Solta o peso."},
+  {c:"acalma", t:"Pensa em um lugar onde você se sente segura. Eu estou nesse lugar com você."},
+
+  /* GERAL */
+  {c:"geral", t:"Se você está pensando em mim agora, saiba que eu também estou pensando em você."},
+  {c:"geral", t:"Se o dia não foi como você esperava, eu quero que ele termine muito melhor."},
+  {c:"geral", t:"Se você abriu esse site, é porque precisava de mim. E eu vim correndo."},
+  {c:"geral", t:"Se você não sabe explicar o que está sentindo, não precisa. Só fica aqui comigo um pouco."},
+  {c:"geral", t:"Se você só queria ler uma coisa bonita hoje, então tá aqui: você é a melhor parte da minha vida."},
+  {c:"geral", t:"Se você está se sentindo perdida, deixa eu ser o seu porto seguro por um instante."},
+  {c:"geral", t:"Se você precisava de um sinal pra continuar, esse é ele: eu te amo e estou aqui."},
+  {c:"geral", t:"Se você está esperando alguém te dizer que vai ficar tudo bem, eu estou dizendo agora."},
+  {c:"geral", t:"Se você abriu isso sem motivo específico, o motivo é esse: eu queria te ver sorrir."},
+  {c:"geral", t:"Se hoje você só precisava saber que alguém te ama, saiba: você é muito, muito amada."}
+];
+
+const PREFIXOS = ["Eu te amo porque","Eu te amo demais porque","Eu te amo tanto porque","Uma das razões é que","O principal motivo é que","Eu me apaixonei porque","Eu escolho você todos os dias porque","Não tem como não te amar porque","Eu tenho certeza que te amo porque","O meu coração bate mais forte porque"];
+const RAZOES = ["o seu sorriso ilumina tudo","o seu abraço é meu porto","o seu jeitinho me encanta","a sua voz me acalma","o seu olhar me desarma","a sua risada é minha música","você me entende com um olhar","você me aceita como sou","você está do meu lado sempre","você me faz querer ser melhor"];
+const COMPLEMENTOS = ["e isso muda meu dia.","e eu me sinto sortudo.","e eu esqueço os problemas.","e o mundo fica bonito.","e eu me sinto em casa.","e eu quero ficar pra sempre.","e eu tenho certeza de que é você.","e isso me faz melhor.","e meu coração acelera.","e eu sorrio sozinho."];
+const TOTAL_MOTIVOS = PREFIXOS.length * RAZOES.length * COMPLEMENTOS.length;
+
+const MUSICAS = [
+  { titulo: "Moonlight on the River", artista: "Mac DeMarco", msg: "Uma vibe mais calma, pra quando a gente só quer deitar juntos e esquecer o mundo." },
+  { titulo: "Love Like You", artista: "Steven Universe", msg: "A letra diz tudo. Eu quero aprender a te amar do jeito que você merece, porque você é perfeita." },
+  { titulo: "Loose", artista: "Daniel Caesar", msg: "Essa me lembra do seu jeitinho solto, do seu sorriso bobo. Eu amo cada detalhe seu." },
+  { titulo: "Blue Hair", artista: "TV Girl", msg: "Nossa vibe total. TV Girl é a nossa banda, e toda música deles me faz pensar em você." },
+  { titulo: "No Other Heart", artista: "Mac DeMarco", msg: "Essa é direta: eu não quero outro coração que não seja o seu. Você é a minha dona." },
+  { titulo: "Let You Break My Heart Again", artista: "Laufey", msg: "Eu te amo tanto que, mesmo se você me machucar, eu ainda vou te amar. Mas prometo que não vou." },
+  { titulo: "Como é Grande o Meu Amor", artista: "Roberto Carlos", msg: "Nossa música. Eu te amo, confesso, não nego. E o meu amor é maior que o mundo." },
+  { titulo: "Mania de Você", artista: "Rita Lee", msg: "Você é a minha mania, o meu vício bom. Eu sou completamente maluco por você." },
+  { titulo: "Exagerado", artista: "Cazuza", msg: "Eu sou exagerado, te amo de um jeito que não cabe no peito." },
+  { titulo: "Garota de Ipanema", artista: "Tom Jobim", msg: "Você é a coisa mais linda e cheia de graça que eu já vi passar na minha vida." },
+  { titulo: "Come Back", artista: "Malcolm Todd", msg: "Essa é pra quando a saudade bate e eu só quero que você volte pros meus braços." },
+  { titulo: "Oh Baby", artista: "Malcolm Todd", msg: "Essa tem a nossa vibe. Me lembro de você em cada verso, do seu jeito, do nosso jeito. Eu te amo, baby." }
+];
+
+const CATEGORIAS = [
+  {id:"aleatorio", label:"Aleatório"}, {id:"acalma", label:"Me acalma"},
+  {id:"esconder", label:"Quero fugir"}, {id:"feliz", label:"Tô feliz"},
+  {id:"brigada", label:"Brava cmg"}, {id:"magoada", label:"Magoada cmg"},
+  {id:"triste", label:"Triste"}, {id:"saudade", label:"Saudade"},
+  {id:"ansiosa", label:"Ansiosa"}, {id:"cansada", label:"Cansada"},
+  {id:"brava", label:"Brava geral"}, {id:"insegura", label:"Insegura"},
+  {id:"ciumenta", label:"Ciumenta"}, {id:"medo", label:"Com medo"},
+  {id:"doente", label:"Doente"}, {id:"tpm", label:"TPM"},
+  {id:"noite", label:"Não durmo"}, {id:"carinho", label:"Carinho"},
+  {id:"geral", label:"Só porque sim"}
+];
+
+/* =========================================================
+   LÓGICA DO SITE
+   ========================================================= */
+const rnd = arr => arr[Math.floor(Math.random() * arr.length)];
+const msgEl = document.getElementById('msg');
+const chipsEl = document.getElementById('chips');
+let catAtual = "aleatorio";
+let msgAtual = "";
+
+CATEGORIAS.forEach(cat => {
+  const b = document.createElement('button');
+  b.className = 'chip' + (cat.id === 'aleatorio' ? ' active' : '');
+  b.textContent = cat.label;
+  b.onclick = () => {
+    catAtual = cat.id;
+    document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+    b.classList.add('active');
+    mostrarMsg();
+  };
+  chipsEl.appendChild(b);
+});
+
+function mostrarMsg(){
+  const pool = catAtual === "aleatorio" ? SITUACOES : SITUACOES.filter(s => s.c === catAtual);
+  msgAtual = rnd(SAUDACOES) + " " + rnd(pool).t + " " + rnd(APOIOS) + " " + rnd(AMORES) + " " + rnd(FECHOS);
+  msgEl.textContent = msgAtual;
+  msgEl.classList.remove('pop');
+  void msgEl.offsetWidth;
+  msgEl.classList.add('pop');
+}
+
+function mostrarAmorAleatorio() {
+  msgAtual = rnd(SAUDACOES) + " " + rnd(AMORES) + " " + rnd(FECHOS);
+  msgEl.textContent = msgAtual;
+  msgEl.classList.remove('pop');
+  void msgEl.offsetWidth;
+  msgEl.classList.add('pop');
+}
+
+document.getElementById('again').onclick = mostrarMsg;
+document.getElementById('btnAmorAleatorio').onclick = mostrarAmorAleatorio;
+
+document.getElementById('copy').onclick = async (e) => {
+  const b = e.currentTarget;
+  try {
+    await navigator.clipboard.writeText(msgAtual);
+    b.innerHTML = "Copiado!";
+    setTimeout(() => b.innerHTML = "Copiar", 1500);
+  } catch { alert("Erro ao copiar."); }
+};
+
+function toggleOverlay(id, forceClose) {
+  const el = document.getElementById(id);
+  if(forceClose || el.classList.contains('on')) {
+    el.classList.remove('on'); document.body.style.overflow = '';
+  } else {
+    el.classList.add('on'); document.body.style.overflow = 'hidden';
+  }
+}
+
+/* =========================================================
+   CLIQUE NA KITTY -> BEIJINHOS
+   ========================================================= */
+document.getElementById('kittyClick').addEventListener('click', function() {
+  const rect = this.getBoundingClientRect();
+  const startX = rect.left + rect.width / 2;
+  const startY = rect.top + rect.height / 2;
+  const ring = document.createElement('span');
+  ring.className = 'kiss-ring';
+  ring.style.left = startX + 'px';
+  ring.style.top = startY + 'px';
+  document.body.appendChild(ring);
+  setTimeout(() => ring.remove(), 600);
+
+  // Os beijinhos nascem juntos num estouro e voam em direções diferentes.
+  const symbols = ['💋','💙','💖','💕','😘','✨'];
+  for (let i = 0; i < 18; i++) {
+    const k = document.createElement('div');
+    k.className = 'fly-kiss';
+    k.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+    const angle = (Math.PI * 2 * i / 18) + (Math.random() - .5) * .45;
+    const distance = 75 + Math.random() * 145;
+    k.style.left = startX + (Math.random() - .5) * 12 + 'px';
+    k.style.top = startY + (Math.random() - .5) * 12 + 'px';
+    k.style.setProperty('--dx', Math.cos(angle) * distance + 'px');
+    k.style.setProperty('--dy', Math.sin(angle) * distance + 'px');
+    k.style.setProperty('--spin', ((Math.random() - .5) * 100) + 'deg');
+    k.style.animationDelay = (Math.random() * 100) + 'ms';
+    document.body.appendChild(k);
+    setTimeout(() => k.remove(), 1200);
+  }
+});
+
+/* =========================================================
+   JOGOS (ME DISTRAIA)
+   ========================================================= */
+document.getElementById('btnDistrair').onclick = () => {
+  toggleOverlay('overlayDistrair');
+  iniciarMemoria();
+  criarBolha(); 
+  prepararStress();
+};
+document.getElementById('fecharDistrair').onclick = () => toggleOverlay('overlayDistrair', true);
+
+function mudarJogo(index) {
+  document.querySelectorAll('.game-tab').forEach((t, i) => {
+    if(i === index) t.classList.add('active'); else t.classList.remove('active');
+  });
+  document.querySelectorAll('.game-section').forEach((s, i) => {
+    if(i === index) s.classList.add('active'); else s.classList.remove('active');
+  });
+  
+  if(index === 2) {
+    prepararStress();
+  }
+}
+
+/* Jogo 1: Bolhas */
+let bolhaTimer;
+function criarBolha() {
+  const area = document.getElementById('bolhasArea');
+  if(!area) return;
+  
+  if(area.children.length < 15) {
+    const b = document.createElement('div');
+    b.className = 'bolha';
+    const size = Math.random() * 30 + 20;
+    b.style.width = size + 'px';
+    b.style.height = size + 'px';
+    b.style.left = (Math.random() * 80 + 10) + '%';
+    b.style.animationDuration = (Math.random() * 3 + 3) + 's';
+    
+    b.onclick = function() {
+      const rect = this.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      
+      this.style.display = 'none';
+      
+      for(let i=0; i<6; i++){
+        const p = document.createElement('div');
+        p.className = 'particula';
+        p.textContent = ['💧','✨','🫧'][Math.floor(Math.random()*3)];
+        p.style.left = centerX + 'px';
+        p.style.top = centerY + 'px';
+        const ang = Math.random() * Math.PI * 2;
+        const dist = 40 + Math.random() * 60;
+        p.style.setProperty('--dx', Math.cos(ang) * dist + 'px');
+        p.style.setProperty('--dy', Math.sin(ang) * dist + 'px');
+        document.body.appendChild(p);
+        setTimeout(() => p.remove(), 1000);
+      }
+    };
+    area.appendChild(b);
+    setTimeout(() => { if(b.parentNode) b.remove(); }, (Math.random() * 3 + 3) * 1000);
+  }
+  bolhaTimer = setTimeout(criarBolha, 800);
+}
+
+/* Jogo 2: Memória */
+let memFlipped = [];
+let memMatched = 0;
+const emojis = ['🐱', '🎀', '☁️', '⭐', '💙', '🍓'];
+
+function iniciarMemoria() {
+  const grid = document.getElementById('memoriaGrid');
+  if(!grid) return;
+  grid.innerHTML = '';
+  memFlipped = [];
+  memMatched = 0;
+  
+  let deck = [...emojis, ...emojis].sort(() => Math.random() - 0.5);
+  
+  deck.forEach(emoji => {
+    const card = document.createElement('div');
+    card.className = 'memoria-card';
+    card.innerHTML = `<span>${emoji}</span>`;
+    card.querySelector('span').style.display = 'none';
+    card.dataset.val = emoji;
+    
+    card.onclick = function() {
+      if(this.classList.contains('flip') || this.classList.contains('matched')) return;
+      
+      this.classList.add('flip');
+      this.querySelector('span').style.display = 'inline-block';
+      memFlipped.push(this);
+      
+      if(memFlipped.length === 2) {
+        if(memFlipped[0].dataset.val === memFlipped[1].dataset.val) {
+          memFlipped[0].classList.add('matched');
+          memFlipped[1].classList.add('matched');
+          memMatched++;
+          memFlipped = [];
+          if(memMatched === 6) setTimeout(() => alert('Você ganhou, meu amor! 🎉'), 500);
+        } else {
+          setTimeout(() => {
+            memFlipped.forEach(c => {
+              c.classList.remove('flip');
+              c.querySelector('span').style.display = 'none';
+            });
+            memFlipped = [];
+          }, 800);
+        }
+      }
+    };
+    grid.appendChild(card);
+  });
+}
+
+/* Jogo 3: Aliviar Estresse */
+let stressScore = 0;
+let stressTime = 5;
+let stressInterval;
+let isStressPlaying = false;
+
+const btnEstresse = document.getElementById('btnEstresse');
+const stressScoreEl = document.getElementById('stressScore');
+const stressTimerEl = document.getElementById('stressTimer');
+const stressResult = document.getElementById('stressResult');
+const stressGameDiv = document.getElementById('stressGame');
+const btnReiniciarStress = document.getElementById('btnReiniciarStress');
+
+const STRESS_MESSAGES = [
+  "Uau! Você deu {score} apertos em 5 segundos! Seu bíceps deve estar ENORME agora... (brincadeira, meu amor).",
+  "Caraca, {score} vezes! Cuidado com esse braço de aço, hein! Tô até com medo de te abraçar.",
+  "Você esmagou o botão {score} vezes! Acho que você tá malhando escondido, só pode.",
+  "Meu Deus, {score} apertos! Esse bíceps tá maior que o meu, com certeza absoluta.",
+  "Nossa, {score} vezes! Você tem uma força gigante, minha princesa. Mas eu ainda consigo te proteger.",
+  "Uau, {score}! Se precisar quebrar algo de verdade, me chama que eu seguro a barra pra você.",
+  "{score} apertos! Devagar, meu amor, o botão é inocente! Mas você foi incrível.",
+  "Incrível! {score} vezes. Eu sabia que você era forte, mas não tanto assim!",
+  "Você apertou {score} vezes! A meta era 50, mas você destruiu o recorde. Eu te amo!",
+  "{score} apertos! Acho que a raiva foi embora, né? Porque o coitado do botão já era.",
+  "Olha a força da minha gatinha! {score} apertos. Tô impressionado de verdade.",
+  "Se o botão fosse de ferro, você tinha amassado! {score} vezes. Você é demais."
+];
+
+function prepararStress() {
+  clearInterval(stressInterval);
+  isStressPlaying = false;
+  stressScore = 0;
+  stressTime = 5;
+  stressScoreEl.textContent = "0";
+  stressTimerEl.textContent = "5";
+  stressResult.style.display = 'none';
+  stressGameDiv.style.display = 'block';
+  btnReiniciarStress.style.display = 'none';
+  
+  btnEstresse.style.width = '150px';
+  btnEstresse.style.height = '150px';
+  btnEstresse.style.fontSize = '20px';
+  btnEstresse.textContent = "APERTA!";
+}
+
+function iniciarStress() {
+  isStressPlaying = true;
+  stressScore = 0;
+  stressTime = 5;
+  
+  registrarAperto();
+
+  clearInterval(stressInterval);
+  stressInterval = setInterval(() => {
+    stressTime--;
+    stressTimerEl.textContent = stressTime;
+    
+    if(stressTime <= 0) {
+      clearInterval(stressInterval);
+      isStressPlaying = false;
+      stressGameDiv.style.display = 'none';
+      btnReiniciarStress.style.display = 'block';
+      
+      let randomMsg = rnd(STRESS_MESSAGES);
+      randomMsg = randomMsg.replace("{score}", stressScore);
+      
+      stressResult.innerHTML = randomMsg + "<br><br>Eu te amo demais! 💙";
+      stressResult.style.display = 'block';
+    }
+  }, 1000);
+}
+
+function registrarAperto() {
+  stressScore++;
+  stressScoreEl.textContent = stressScore;
+  
+  let currentSize = 150 - (stressScore * 2);
+  if(currentSize < 50) currentSize = 50;
+  let currentFont = 20 - (stressScore * 0.2);
+  if(currentFont < 10) currentFont = 10;
+  
+  btnEstresse.style.width = currentSize + 'px';
+  btnEstresse.style.height = currentSize + 'px';
+  btnEstresse.style.fontSize = currentFont + 'px';
+  
+  const rect = btnEstresse.getBoundingClientRect();
+  const centerX = rect.left + rect.width / 2;
+  const centerY = rect.top + rect.height / 2;
+  
+  for(let i=0; i<3; i++){
+    const p = document.createElement('div');
+    p.className = 'particula';
+    p.textContent = ['💥','✨','💢'][Math.floor(Math.random()*3)];
+    p.style.left = centerX + 'px';
+    p.style.top = centerY + 'px';
+    const ang = Math.random() * Math.PI * 2;
+    const dist = 50 + Math.random() * 50;
+    p.style.setProperty('--dx', Math.cos(ang) * dist + 'px');
+    p.style.setProperty('--dy', Math.sin(ang) * dist + 'px');
+    document.body.appendChild(p);
+    setTimeout(() => p.remove(), 1000);
+  }
+}
+
+btnEstresse.addEventListener('pointerdown', (e) => {
+  e.preventDefault();
+  if (!isStressPlaying) {
+    iniciarStress();
+  } else {
+    registrarAperto();
+  }
+});
+
+btnReiniciarStress.onclick = prepararStress;
+
+/* =========================================================
+   OUTRAS FUNÇÕES
+   ========================================================= */
+const DESCULPAS_MOTIVOS = [
+  "ter sido um idiota e não ter te escutado direito.",
+  "ter falado sem pensar e acabado te machucando.",
+  "não ter te dado a atenção que você merecia naquele momento.",
+  "ter tratado os seus sentimentos como se fossem menores do que são.",
+  "ter deixado o orgulho falar mais alto que o amor que sinto por você.",
+  "ter respondido de um jeito grosso quando você só queria conversar.",
+  "não ter percebido que minhas palavras estavam te fazendo mal.",
+  "ter insistido em estar certo em vez de tentar te entender.",
+  "ter transformado uma conversa que podia ser tranquila em uma discussão.",
+  "não ter tido a paciência que você precisava de mim.",
+  "ter feito você se sentir sozinha mesmo estando comigo.",
+  "não ter levado a sério algo que era importante pra você.",
+  "ter sido egoísta e pensado só no meu lado da história.",
+  "ter demorado pra reconhecer que eu errei.",
+  "ter tentado me explicar antes de realmente te ouvir.",
+  "ter feito uma brincadeira que passou do limite e te magoou.",
+  "não ter cuidado do jeito que falei com você.",
+  "ter deixado a irritação descontar em quem eu mais amo.",
+  "ter criado um clima ruim quando eu podia ter agido com mais calma.",
+  "não ter demonstrado com atitudes o carinho que sinto por você.",
+  "ter te interrompido em vez de deixar você terminar de falar.",
+  "ter entendido tudo errado e reagido antes de perguntar.",
+  "ter sido imaturo numa situação em que precisava agir melhor.",
+  "ter esquecido que nós dois estamos do mesmo lado.",
+  "ter feito você precisar repetir algo que eu deveria ter escutado da primeira vez.",
+  "ter invalidado o que você sentia, mesmo sem querer.",
+  "ter deixado a conversa virar uma disputa em vez de uma solução.",
+  "não ter te acolhido quando você precisava de carinho.",
+  "ter usado um tom que você não merecia ouvir de mim.",
+  "ter sido impulsivo e não pensado nas consequências.",
+  "ter focado no que me incomodou e ignorado o que te machucou.",
+  "ter deixado um mal-entendido crescer em vez de esclarecer com calma.",
+  "não ter respeitado o momento em que você precisava de espaço.",
+  "ter tentado resolver tudo rápido sem entender o que você estava sentindo.",
+  "ter feito você duvidar de que eu estava prestando atenção.",
+  "não ter assumido minha parte na situação logo de cara.",
+  "ter sido cabeça-dura quando você estava tentando me explicar algo.",
+  "ter respondido na defensiva em vez de conversar com carinho.",
+  "ter deixado minhas inseguranças influenciarem a forma como falei com você.",
+  "ter esquecido que amar você também significa aprender a te ouvir.",
+  "ter dado uma resposta seca quando você merecia cuidado.",
+  "ter sido injusto ao julgar a situação só pelo meu ponto de vista.",
+  "ter feito você se sentir incompreendida.",
+  "ter levado a conversa para um lado que não ajudava em nada.",
+  "não ter reconhecido na hora o quanto aquilo era importante pra você.",
+  "ter deixado o estresse do dia afetar o nosso jeito de conversar.",
+  "ter tentado brincar quando você precisava que eu levasse a sério.",
+  "ter reagido com pressa, sem pensar no que você queria dizer.",
+  "ter te magoado mesmo sendo justamente a última pessoa que eu queria machucar.",
+  "não ter sido a melhor versão de mim numa hora importante pra nós."
+];
+
+const DESCULPAS_FINAIS = [
+  "Eu sei que pedir desculpa não apaga o que aconteceu. Quero mostrar com atitudes que entendi meu erro.",
+  "Você não precisa fingir que tá tudo bem agora. Eu só queria reconhecer que errei e te pedir perdão.",
+  "Eu te amo, minha princesa, e quero aprender a cuidar melhor do seu coração. Me desculpa.",
+  "Não quero te convencer com palavras bonitas; quero melhorar de verdade, um dia de cada vez.",
+  "Eu devia ter te ouvido com mais carinho. Desculpa por não ter feito isso quando você precisava.",
+  "Você merece respeito até quando a gente discorda. Vou me esforçar pra lembrar disso sempre.",
+  "Não espero que você esqueça tudo num instante. Quero reconstruir a confiança com paciência e atitudes.",
+  "Me desculpa, meu amor. Eu podia ter lidado com isso de um jeito muito melhor.",
+  "Eu não gosto de saber que te machuquei, mas sei que preciso encarar meu erro sem inventar desculpas.",
+  "Quero entender o que você sentiu, não discutir com você sobre se deveria ou não ter sentido.",
+  "Você é importante demais pra eu tratar uma conversa nossa de qualquer jeito. Me perdoa.",
+  "Eu errei nessa, e não vou colocar a culpa em você. Desculpa de coração.",
+  "Quero que você se sinta ouvida e respeitada comigo. Sei que preciso demonstrar isso melhor.",
+  "Me desculpa por não ter parado pra pensar antes de agir. Vou tentar fazer diferente na próxima vez.",
+  "Eu queria voltar no tempo e escolher melhor minhas palavras, mas agora posso assumir o erro e mudar.",
+  "Eu te amo, meu amor, e isso também significa aceitar quando preciso melhorar.",
+  "Não quero ganhar uma discussão e perder a paz entre nós. Desculpa por ter esquecido o que realmente importa.",
+  "Você merece uma conversa tranquila, não mais estresse. Quando você quiser, quero te ouvir de verdade.",
+  "Eu entendo se você ainda estiver magoada. Não vou apressar seu tempo nem exigir que fique tudo bem.",
+  "Me desculpa por ter feito você se sentir assim. Quero compreender melhor e não repetir esse comportamento.",
+  "Eu podia ter sido mais gentil e cuidadoso. Você merecia isso de mim.",
+  "Não vou prometer perfeição, mas prometo levar meu esforço a sério e corrigir o que estiver ao meu alcance.",
+  "Quero que minhas atitudes combinem com o amor que digo sentir por você. Me desculpa, de verdade.",
+  "Eu devia ter perguntado e escutado antes de tirar conclusões. Vou lembrar disso.",
+  "Me perdoa, minha princesa. Não quero que o meu orgulho seja maior que a vontade de te entender.",
+  "Você não tem que cuidar dos meus sentimentos enquanto está magoada comigo. Eu vou assumir a minha parte.",
+  "Sinto muito pelo jeito como conduzi as coisas. Quero conversar sem te interromper e sem ficar na defensiva.",
+  "Eu sei que confiança se constrói aos poucos. Quero fazer a minha parte com sinceridade e consistência.",
+  "Não foi justo com você, e eu reconheço isso. Desculpa por não ter agido melhor.",
+  "Quero aprender com essa situação em vez de repetir o mesmo erro e pedir desculpa de novo.",
+  "Eu devia ter escolhido o carinho em vez da grosseria. Sinto muito, meu amor.",
+  "Você merece ser levada a sério por mim. Vou prestar mais atenção no que você me conta.",
+  "Não quero apagar sua mágoa com uma frase pronta. Quero entender o que posso fazer melhor.",
+  "Eu fui teimoso e isso não ajudou em nada. Me desculpa por não ter cedido espaço pra te ouvir.",
+  "Você é minha pessoa favorita, mas sei que isso precisa aparecer no meu jeito de te tratar também.",
+  "Sinto muito por ter deixado a situação chegar nesse ponto. Quero fazer diferente daqui pra frente.",
+  "Eu não espero perdão imediato. Só queria que você soubesse que reconheço meu erro e quero melhorar.",
+  "Me desculpa, meu amor. Quero ser alguém com quem você possa conversar sem medo de ser ignorada.",
+  "Eu devia ter cuidado melhor das minhas palavras. Vou tentar falar com mais calma, mesmo quando estiver irritado.",
+  "Não quero que você precise repetir sua dor pra que eu entenda. Vou me esforçar pra escutar desde o começo.",
+  "Você merece consideração, inclusive quando eu estou chateado. Desculpa por ter falhado nisso.",
+  "Eu amo você e quero que a gente resolva as coisas com respeito, não com orgulho.",
+  "Eu entendo que minha intenção não muda o efeito que minhas atitudes tiveram. Sinto muito.",
+  "Vou pensar melhor antes de responder e, se eu não entender, vou perguntar em vez de presumir.",
+  "Desculpa por ter sido injusto com você. Quero olhar para a situação com mais honestidade.",
+  "Eu devia ter te dado espaço pra falar. Da próxima vez, vou ouvir até o fim antes de responder.",
+  "Você não merece receber minha impaciência. Quero aprender a lidar melhor com o que sinto.",
+  "Me desculpa por ter complicado algo que pedia calma, respeito e uma conversa sincera.",
+  "Eu quero que você veja mudança nas pequenas coisas também, não só quando eu estou tentando me desculpar.",
+  "Eu te amo, minha princesa. Sinto muito por ter te magoado e quero fazer a minha parte pra reparar isso."
+];
+let ultimaDesculpa = "";
+function gerarDesculpa() {
+  let texto = "";
+  // Evita repetir a mesma combinação em cliques seguidos.
+  for (let tentativa = 0; tentativa < 12; tentativa++) {
+    const motivo = rnd(DESCULPAS_MOTIVOS);
+    const final = rnd(DESCULPAS_FINAIS);
+    texto = "Me desculpa por <strong>" + motivo + "</strong><br><br>" + final;
+    if (texto !== ultimaDesculpa) break;
+  }
+  ultimaDesculpa = texto;
+  const el = document.getElementById('txtDesculpa');
+  el.innerHTML = texto;
+  el.style.animation = 'none'; void el.offsetWidth; el.style.animation = 'popBounce 0.4s';
+}
+
+document.getElementById('btnDesculpa').onclick = () => { toggleOverlay('overlayDesculpa'); gerarDesculpa(); };
+document.getElementById('btnGerarDesculpa').onclick = gerarDesculpa;
+document.getElementById('fecharDesculpa').onclick = () => toggleOverlay('overlayDesculpa', true);
+document.getElementById('btnPerdoa').onclick = () => {
+  toggleOverlay('overlayDesculpa', true);
+  msgEl.textContent = "Obrigado, meu amor! Eu prometo que vou fazer de tudo pra te ver sorrir de novo. Você é a melhor coisa que já me aconteceu. Eu te amo mais do que tudo nessa vida!";
+};
+
+let numMotivo = 0;
+function gerarMotivo() { return rnd(PREFIXOS) + " " + rnd(RAZOES) + " " + rnd(COMPLEMENTOS); }
+document.getElementById('btnMotivo').onclick = () => { toggleOverlay('overlayMotivos'); numMotivo = 0; proxMotivo(); };
+document.getElementById('fecharMotivo').onclick = () => toggleOverlay('overlayMotivos', true);
+document.getElementById('btnProximoMotivo').onclick = proxMotivo;
+function proxMotivo() {
+  numMotivo++;
+  document.getElementById('motivosTxt').textContent = gerarMotivo();
+  document.getElementById('motivosNum').innerHTML = "Motivo " + numMotivo + " de " + TOTAL_MOTIVOS.toLocaleString('pt-BR');
+  const txtEl = document.getElementById('motivosTxt');
+  txtEl.classList.remove('pop'); void txtEl.offsetWidth; txtEl.classList.add('pop');
+}
+
+document.getElementById('btnMusica').onclick = () => {
+  toggleOverlay('overlayMusicas');
+  if(document.getElementById('listaMusicas').children.length === 0) {
+    MUSICAS.forEach(m => {
+      document.getElementById('listaMusicas').innerHTML += "<div class='musica-item'><div class='musica-titulo'>" + m.titulo + "</div><div class='musica-artista'>" + m.artista + "</div><div class='musica-msg'>\"" + m.msg + "\"</div></div>";
+    });
+  }
+};
+document.getElementById('fecharMusicas').onclick = () => toggleOverlay('overlayMusicas', true);
+
+let hugTimer;
+document.getElementById('abraco').onclick = () => {
+  toggleOverlay('overlayAbraco');
+  document.getElementById('passoRespira').style.display = 'block';
+  document.getElementById('passoAbraco').style.display = 'none';
+  iniciarRespiracao();
+};
+document.getElementById('btnProximoAbraco').onclick = () => {
+  clearTimeout(hugTimer);
+  document.getElementById('passoRespira').style.display = 'none';
+  document.getElementById('passoAbraco').style.display = 'block';
+};
+document.getElementById('btnFinalizarAbraco').onclick = () => toggleOverlay('overlayAbraco', true);
+
+function iniciarRespiracao() {
+  const c = document.getElementById('circuloRespira');
+  const t = document.getElementById('txtRespira');
+  clearTimeout(hugTimer);
+  function ciclo() {
+    c.className = 'circulo-respira inspira'; c.textContent = 'inspira'; t.textContent = 'Enche o peito de ar...';
+    hugTimer = setTimeout(() => {
+      c.textContent = 'segura'; t.textContent = 'Segura o ar...';
+      hugTimer = setTimeout(() => {
+        c.className = 'circulo-respira expira'; c.textContent = 'expira'; t.textContent = 'Solta o ar devagar...';
+        hugTimer = setTimeout(ciclo, 4000);
+      }, 3000);
+    }, 4000);
+  }
+  ciclo();
+}
+
+(function() {
+  const wrap = document.getElementById('hearts');
+  const simb = ['♥','♡','💙','✦','✧'];
+  for(let i=0; i<20; i++) {
+    const s = document.createElement('span');
+    s.className = 'heart'; s.textContent = simb[Math.floor(Math.random()*simb.length)];
+    s.style.left = Math.random()*100 + '%';
+    s.style.fontSize = (12 + Math.random()*20) + 'px';
+    s.style.animationDuration = (8 + Math.random()*10) + 's';
+    s.style.animationDelay = (-Math.random()*15) + 's';
+    wrap.appendChild(s);
+  }
+})();
+
+mostrarMsg();
+</script>
+</body>
+</html>
